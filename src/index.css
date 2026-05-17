@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* SLOW HERO ZOOM */
+@keyframes slowZoom {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-slowZoom {
+  animation: slowZoom 18s ease-in-out infinite alternate;
+}
+
+/* FLOATING CARDS */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-float2 {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* INFINITE BRAND SLIDER */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 28s linear infinite;
+}
+
+/* SMOOTH SCROLL */
+html {
+  scroll-behavior: smooth;
+}
+
+/* PREMIUM SCROLLBAR */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    to bottom,
+    #f97316,
+    #ea580c
+  );
+
+  border-radius: 999px;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+@keyframes loader {
+  0% {
+    width: 0%;
+  }
+
+  100% {
+    width: 100%;
+  }
+}
+
+.animate-loader {
+  animation: loader 2s ease-in-out forwards;
+}
