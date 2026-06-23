@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
+import ContactHero from "../components/contact/ContactHero";
 
 import {
   FaWhatsapp,
@@ -14,7 +15,8 @@ import { MdEmail } from "react-icons/md";
 import contactHero from "../assets/sariya/contact-hero.png";
 import constructionSite from "../assets/sariya/construction-site.jpeg";
 import deliveryTruck from "../assets/sariya/delivery-truck.jpeg";
-import polaadImg from "../assets/sariya/polaad-tmt.png";
+import polaadImg from "../assets/sariya/polaad-logo.png";
+
 
 const Contact = () => {
   return (
@@ -39,84 +41,8 @@ const Contact = () => {
     <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden">
 
       {/* Hero Section */}
-<section className="relative min-h-[90vh] flex items-center overflow-hidden">
 
-  {/* Background Image */}
-  <img
-    src={contactHero}
-    alt="Laxminath Iron Shop"
-    className="absolute inset-0 w-full h-full object-cover object-center"
-  />
-
-  {/* Dark Overlay */}
-  <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/55 to-transparent"></div>
-
-  {/* Extra Soft Overlay */}
-  <div className="absolute inset-0 bg-black/20"></div>
-
-  {/* Content */}
-  <div className="relative z-10 max-w-9xl mx-auto px-6 py-24 w-full">
-
-    <div className="max-w-2xl">
-
-      {/* Badge */}
-      <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-xl border border-white/20 px-5 py-3 rounded-full text-sm font-semibold text-orange-300 mb-8 shadow-lg">
-
-        <FaCheckCircle className="text-orange-400" />
-
-        Trusted Construction Material Supplier
-
-      </div>
-
-      {/* Heading */}
-      <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.05] text-white mb-6 drop-shadow-2xl">
-
-        Laxminath
-        <span className="text-orange-400"> Iron</span>
-
-      </h1>
-
-      {/* Description */}
-      <p className="text-lg sm:text-xl text-slate-200 leading-relaxed mb-10 max-w-xl">
-
-        Premium supplier of
-        <span className="text-white font-semibold"> Polaad TMT Sariya</span>,
-        <span className="text-white font-semibold"> MP Birla Cement</span>
-        and Scrap Materials in
-        <span className="text-orange-300 font-semibold"> Bassi, Chittorgarh</span>.
-
-      </p>
-
-      {/* Buttons */}
-      <div className="flex flex-col sm:flex-row gap-5">
-
-        {/* WhatsApp Button */}
-        <a
-          href="https://wa.me/918824841765?text=Hello%20Laxminath%20Iron,%20I%20want%20a%20quotation."
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-green-500 hover:bg-green-600 px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition duration-300 hover:scale-105 shadow-2xl"
-        >
-          <FaWhatsapp size={24} />
-          WhatsApp Now
-        </a>
-
-        {/* Call Button */}
-        <a
-          href="tel:+918824841765"
-          className="bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 px-8 py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-3 transition duration-300 text-white"
-        >
-          <FaPhoneAlt />
-          Call Now
-        </a>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
+        <ContactHero />
 
 
 

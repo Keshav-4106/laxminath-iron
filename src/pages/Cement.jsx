@@ -2,14 +2,29 @@ import React, { useState, useMemo } from "react";
 import { cementData } from "../data/cementData";
 import ProductCard from "../components/ProductCard";
 import { Helmet } from "react-helmet-async";
-import { FaWhatsapp, FaTruck, FaShieldAlt } from "react-icons/fa";
+import { 
+  FaWhatsapp, 
+  FaTruck, 
+  FaShieldAlt, 
+  FaCalculator, 
+  FaExclamationTriangle 
+} from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 
+// Naya imported component wrapper
+import CementHero from "../components/cement/CementHero"; 
+
 const Cement = () => {
-
+  // -----------------------------
+  // STATES
+  // -----------------------------
   const [quantities, setQuantities] = useState({});
+  const [deliveryMode, setDeliveryMode] = useState("delivery"); 
+  const [distance, setDistance] = useState(""); 
 
-  // Quantity Handler
+  const CNG_PRICE = 85;      
+  const DIESEL_PRICE = 90;    
+
   const handleQuantityChange = (productName, qty) => {
     setQuantities((prev) => ({
       ...prev,
@@ -17,269 +32,186 @@ const Cement = () => {
     }));
   };
 
-  // Live Calculations
-  const { totalBags, grandTotal } = useMemo(() => {
-
+  // -----------------------------
+  // LIVE CALCULATIONS
+  // -----------------------------
+  const { totalBags, rawMaterialTotal, totalWeight } = useMemo(() => {
     let bags = 0;
     let total = 0;
-
     cementData.products.forEach((product) => {
-
       const qty = quantities[product.name] || 0;
-
       bags += qty;
-
       total += qty * product.price;
     });
-
-    return {
-      totalBags: bags,
-      grandTotal: total,
-    };
-
+    return { totalBags: bags, rawMaterialTotal: total, totalWeight: bags * 50 };
   }, [quantities]);
 
-  // WhatsApp Order
-  const handleWhatsApp = () => {
+  // -----------------------------
+  // LOGISTICS ALGORITHM
+  // -----------------------------
+  const logistics = useMemo(() => {
+    if (deliveryMode === "pickup") {
+      return { freightCharge: 0, vehicleUsed: "Customer Vehicle", isValid: true, error: "" };
+    }
+    if (distance === "" || distance <= 0) {
+      return { freightCharge: 0, vehicleUsed: "Not Selected", isValid: false, error: "Enter valid distance for delivery fare." };
+    }
+    const roundTripDistance = distance * 2; 
 
-    let message = `*Laxminath Iron Cement Inquiry*%0A%0A`;
+    if (totalWeight > 10000) {
+      return {
+        freightCharge: 0,
+        vehicleUsed: "NONE",
+        isValid: false,
+        error: `⚠️ Overloaded! Weight exceeds Tractor capacity.`,
+      };
+    }
 
+    if (totalWeight <= 2500) {
+      const autoMileage = 19; 
+      const autoFuelCost = (roundTripDistance / autoMileage) * CNG_PRICE;
+      return { freightCharge: Math.round(autoFuelCost + 150), vehicleUsed: "Tata CNG Auto", isValid: true, error: "" };
+    } else {
+      const tractorMileage = 5; 
+      const tractorFuelCost = (roundTripDistance / tractorMileage) * DIESEL_PRICE;
+      return { freightCharge: Math.round(tractorFuelCost + 300), vehicleUsed: "Tractor", isValid: true, error: "" };
+    }
+  }, [deliveryMode, distance, totalWeight]);
+
+  const finalGrandTotal = rawMaterialTotal + logistics.freightCharge;
+
+  const handleWhatsAppOrderSubmit = () => {
+    let message = `*Laxminath Iron - Cement Inquiry*%0A%0A`;
     let hasItems = false;
-
     cementData.products.forEach((product) => {
-
       const qty = quantities[product.name] || 0;
-
       if (qty > 0) {
-
         hasItems = true;
-
-        const total = qty * product.price;
-
-        message += `• ${product.name}%0A`;
-        message += `Quantity: ${qty} Bags%0A`;
-        message += `Amount: ₹${total}%0A%0A`;
+        message += `• *${product.name}* -> ${qty} Bags%0A`;
       }
     });
-
     if (!hasItems) return;
-
-    message += `*Total Bags:* ${totalBags}%0A`;
-    message += `*Grand Total:* ₹${grandTotal.toLocaleString(
-      "en-IN"
-    )}%0A%0A`;
-
-    message += `Please confirm delivery availability.`;
-
-    const whatsappUrl = `https://wa.me/918824841765?text=${message}`;
-
-    window.open(whatsappUrl, "_blank");
+    message += `%0A*GRAND TOTAL:* ₹${finalGrandTotal.toLocaleString("en-IN")}`;
+    window.open(`https://wa.me/918824841765?text=${message}`, "_blank");
   };
 
   return (
     <>
-    <Helmet>
+      <Helmet>
+        <title>MP Birla Cement Dealer in Bassi, Chittorgarh | Laxminath Iron</title>
+      </Helmet>
 
-  <title>
-    MP Birla Cement Dealer in Bassi, Chittorgarh | Laxminath Iron
-  </title>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden transition-colors duration-300">
+        
+        {/* DYNAMIC COMPONENT CALL - Exact look, text animation & height match */}
+        <CementHero />
 
-  <meta
-    name="description"
-    content="Authorized MP Birla Cement supplier in Bassi, Chittorgarh. Best cement rates, fast delivery and genuine products available."
-  />
+        {/* MAIN BODY GRID WRAPPER */}
+        <div className="max-w-7xl mx-auto px-6 py-20 relative z-20 -mt-16">
+          
+          {/* TRUST CARDS PANEL */}
+          <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
+              <FaShieldAlt className="text-4xl text-orange-500 mx-auto mb-4" />
+              <h3 className="text-xl font-bold mb-2">Genuine Products</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">100% original MP Birla Cement products.</p>
+            </div>
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
+              <FaTruck className="text-4xl text-orange-500 mb-4 mx-auto" />
+              <h3 className="text-xl font-bold mb-2">Fast Delivery</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">Quick delivery metrics adjusted via load limits.</p>
+            </div>
+            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
+              <MdVerified className="text-4xl text-orange-500 mb-4 mx-auto" />
+              <h3 className="text-xl font-bold mb-2">Trusted Dealer</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">Transparent yard parameters and direct checkout options.</p>
+            </div>
+          </section>
 
-  <meta
-    name="keywords"
-    content="MP Birla Cement dealer Bassi, Cement supplier Chittorgarh, Cement shop Rajasthan"
-  />
+          {/* TWO COLUMN grid system elements layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
+            <div className="space-y-12">
+              <section>
+                <div className="mb-8">
+                  <h2 className="text-3xl font-extrabold mb-2">Our Cement Products</h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {cementData.products.map((product) => (
+                    <ProductCard
+                      key={product.id} name={product.name} image={product.image} price={product.price}
+                      unit={product.unit} quantity={quantities[product.name] || 0}
+                      onQuantityChange={(qty) => handleQuantityChange(product.name, qty)}
+                      features={product.features} bestFor={product.bestFor}
+                    />
+                  ))}
+                </div>
+              </section>
+            </div>
 
-</Helmet>
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-
-      {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-r from-slate-900 to-slate-700 text-white py-24 px-4 overflow-hidden">
-
-        <div className="max-w-7xl mx-auto text-center relative z-10">
-
-          <p className="uppercase tracking-[4px] text-sm text-amber-400 font-semibold mb-4">
-            Authorized Dealer
-          </p>
-
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
-            Premium MP Birla Cement
-          </h1>
-
-          <p className="max-w-3xl mx-auto text-lg text-slate-300 mb-8">
-            Strong foundation starts with premium quality cement.
-            Get genuine MP Birla Cement products with trusted delivery
-            and best market rates.
-          </p>
-
-          <a
-            href="https://wa.me/918824841765"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition duration-300 shadow-lg"
-          >
-            <FaWhatsapp className="text-2xl" />
-            Contact on WhatsApp
-          </a>
-        </div>
-      </section>
-
-      {/* MAIN CONTENT */}
-      <div className="max-w-7xl mx-auto px-4 py-16">
-
-        {/* TRUST SECTION */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-lg text-center">
-            <FaShieldAlt className="text-5xl text-amber-500 mx-auto mb-4" />
-
-            <h3 className="text-xl font-bold dark:text-white mb-2">
-              Genuine Products
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400">
-              100% original MP Birla Cement products.
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-lg text-center">
-            <FaTruck className="text-5xl text-blue-500 mx-auto mb-4" />
-
-            <h3 className="text-xl font-bold dark:text-white mb-2">
-              Fast Delivery
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400">
-              Quick local delivery available for all orders.
-            </p>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-lg text-center">
-            <MdVerified className="text-5xl text-green-500 mx-auto mb-4" />
-
-            <h3 className="text-xl font-bold dark:text-white mb-2">
-              Trusted Dealer
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400">
-              Reliable service and competitive market pricing.
-            </p>
-          </div>
-        </section>
-
-        {/* PRODUCT GRID */}
-        <section className="mb-20">
-
-          <div className="text-center mb-12">
-
-            <h2 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
-              Our Cement Products
-            </h2>
-
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              Choose the right cement for your construction needs.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {cementData.products.map((product) => (
-
-              <ProductCard
-                key={product.id}
-                name={product.name}
-                image={product.image}
-                price={product.price}
-                unit={product.unit}
-                quantity={quantities[product.name] || 0}
-                onQuantityChange={(qty) =>
-                  handleQuantityChange(product.name, qty)
-                }
-                features={product.features}
-                bestFor={product.bestFor}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* CEMENT GUIDE */}
-        <section className="bg-white dark:bg-slate-800 rounded-3xl p-10 shadow-xl mb-20">
-
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-10 text-center">
-            Cement Usage Guide
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-
-            {cementData.products.map((product) => (
-
-              <div
-                key={product.id}
-                className="bg-slate-100 dark:bg-slate-900 rounded-2xl p-6"
-              >
-                <h3 className="text-xl font-bold dark:text-white mb-3">
-                  {product.name}
+            {/* AUTOMATED CALCULATOR INTERFACE */}
+            <div className="lg:sticky lg:top-24">
+              <div className="bg-slate-900 border border-slate-800 text-white rounded-[32px] p-6 shadow-2xl">
+                <h3 className="text-2xl font-black mb-4 flex items-center gap-2 text-orange-400">
+                  <FaCalculator /> Checkout & Logistics
                 </h3>
+                <div className="space-y-2 border-b border-slate-800 pb-4 mb-4 text-sm text-slate-400">
+                  <div className="flex justify-between">
+                    <span>Selected Load:</span>
+                    <span className="font-bold text-white">{totalBags} Bags</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Material Cost:</span>
+                    <span className="font-bold text-white">₹{rawMaterialTotal.toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
 
-                <p className="text-slate-600 dark:text-slate-400">
-                  Best For:
-                </p>
+                <div className="mb-5">
+                  <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Delivery Option</label>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button" onClick={() => setDeliveryMode("delivery")}
+                      className={`p-3 rounded-2xl border text-sm font-bold transition ${deliveryMode === "delivery" ? "bg-orange-500 text-black" : "border-slate-800 bg-slate-950 text-slate-400"}`}
+                    >Home Delivery</button>
+                    <button
+                      type="button" onClick={() => setDeliveryMode("pickup")}
+                      className={`p-3 rounded-2xl border text-sm font-bold transition ${deliveryMode === "pickup" ? "bg-orange-500 text-black" : "border-slate-800 bg-slate-950 text-slate-400"}`}
+                    >Self-Pickup</button>
+                  </div>
+                </div>
 
-                <p className="font-semibold text-slate-900 dark:text-white mt-2">
-                  {product.bestFor}
-                </p>
+                {deliveryMode === "delivery" && (
+                  <div className="space-y-4 bg-slate-950 p-4 rounded-2xl border border-slate-800 mb-4">
+                    <input
+                      type="number" min="0" value={distance}
+                      onChange={(e) => setDistance(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))}
+                      placeholder="Enter distance in km"
+                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-bold focus:outline-none focus:border-orange-500"
+                    />
+                    {logistics.error && <div className="text-xs text-red-400">{logistics.error}</div>}
+                  </div>
+                )}
+
+                <div className="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800 mb-6">
+                  <div className="flex justify-between text-sm">
+                    <span>Freight Charge:</span>
+                    <span className="font-bold text-emerald-400">₹{logistics.freightCharge}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span>Grand Total:</span>
+                    <span className="text-3xl font-black text-amber-400">₹{finalGrandTotal.toLocaleString("en-IN")}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button" onClick={handleWhatsAppOrderSubmit}
+                  disabled={rawMaterialTotal === 0 || (deliveryMode === "delivery" && !distance)}
+                  className="w-full py-4 rounded-2xl font-black text-lg bg-green-500 hover:bg-green-600 text-white transition-all disabled:bg-slate-800 disabled:text-slate-600"
+                >Send Inquiry via WhatsApp</button>
               </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* STICKY FOOTER */}
-      <div className="fixed bottom-4 left-4 right-4 md:left-auto md:right-8 md:w-auto z-50 bg-slate-900 text-white rounded-3xl p-6 shadow-2xl border border-slate-700 flex flex-col md:flex-row items-center gap-6">
-
-        <div className="flex items-center gap-8">
-
-          <div>
-            <p className="text-sm text-slate-400">
-              Total Bags
-            </p>
-
-            <h3 className="text-2xl font-bold">
-              {totalBags}
-            </h3>
-          </div>
-
-          <div className="w-px h-12 bg-slate-700"></div>
-
-          <div>
-            <p className="text-sm text-slate-400">
-              Grand Total
-            </p>
-
-            <h3 className="text-3xl font-extrabold text-amber-400">
-              ₹{grandTotal.toLocaleString("en-IN")}
-            </h3>
+            </div>
           </div>
         </div>
-
-        <button
-          onClick={handleWhatsApp}
-          disabled={grandTotal === 0}
-          className={`px-8 py-4 rounded-2xl font-bold text-lg transition duration-300 flex items-center gap-3 ${
-            grandTotal > 0
-              ? "bg-green-500 hover:bg-green-600"
-              : "bg-slate-700 cursor-not-allowed"
-          }`}
-        >
-          <FaWhatsapp className="text-2xl" />
-          Send Inquiry
-        </button>
       </div>
-    </div>
     </>
   );
 };

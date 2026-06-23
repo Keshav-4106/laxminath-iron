@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Import Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Scrap from './pages/Scrap';
 
 // Import Pages
 import Home from './pages/Home';
@@ -29,8 +28,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/sariya" element={<Sariya />} />
             <Route path="/cement" element={<Cement />} />
-            <Route path="/scrap" element={<Scrap />} />
             <Route path="/contact" element={<Contact />} />
+          
             
           </Routes>
         </main>
