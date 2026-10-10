@@ -2,56 +2,38 @@ import React from "react";
 
 import {
   FiShield,
-  FiTrendingUp,
   FiCheckCircle,
+  FiLayers,
+  FiAward,
 } from "react-icons/fi";
-
-import {
-  FaIndustry,
-  FaBolt,
-} from "react-icons/fa";
 
 const features = [
   {
-    icon: <FiTrendingUp />,
-    title: "High Strength TMT Bars",
+    icon: <FiAward />,
+    title: "Fe 550D Grade",
     description:
-      "Polaad TMT bars provide superior tensile strength and durability for residential and commercial construction.",
+      "Fe 550D means a minimum yield strength of 550 N/mm\u00b2, with the extra ductility (\"D\") requirements of IS 1786.",
   },
 
   {
-    icon: <FaBolt />,
-    title: "Earthquake Resistant",
+    icon: <FiLayers />,
+    title: "Ribbed Surface",
     description:
-      "Advanced manufacturing technology gives better flexibility and seismic resistance during earthquakes.",
+      "Like all TMT bars, Polaad bars are ribbed so they grip the surrounding concrete.",
   },
 
   {
     icon: <FiShield />,
-    title: "Corrosion Resistant",
+    title: "Genuine Polaad Stock",
     description:
-      "Special rib design and quality processing improve corrosion resistance and long-term durability.",
-  },
-
-  {
-    icon: <FaIndustry />,
-    title: "Better Concrete Bonding",
-    description:
-      "Strong rib patterns ensure better grip with concrete for safer structural performance.",
+      "Supplied by an authorised Polaad dealer. The certificate of authorisation is shown on this page.",
   },
 
   {
     icon: <FiCheckCircle />,
-    title: "Trusted Quality",
+    title: "Common RCC Uses",
     description:
-      "Widely trusted by contractors, builders, and homeowners for reliable construction quality.",
-  },
-
-  {
-    icon: <FiShield />,
-    title: "Suitable for All Projects",
-    description:
-      "Perfect for slabs, columns, beams, foundations, and modern RCC construction projects.",
+      "Used in slabs, beams, columns and foundations. Always follow the sizes and quantities in your structural design.",
   },
 ];
 
@@ -63,25 +45,24 @@ const WhyPolaad = () => {
       <div className="max-w-3xl">
 
         <span className="text-orange-500 font-bold uppercase tracking-[0.2em]">
-          Why Choose Polaad
+          About Polaad QST
         </span>
 
         <h2 className="mt-4 text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight">
-          Engineered for Strong &
-          Reliable Construction
+          Polaad QST Fe 550D
+          TMT Bars
         </h2>
 
         <p className="mt-6 text-lg text-slate-600 dark:text-slate-400 leading-8">
-          Polaad TMT bars are designed for high durability,
-          better structural strength, and long-lasting
-          construction performance across residential and
-          commercial projects.
+          We stock Polaad QST Fe 550D TMT bars in 8 mm to 25 mm
+          for residential and commercial RCC work. Ask your site
+          engineer which sizes and quantities your design needs.
         </p>
 
       </div>
 
       {/* Features Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mt-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
 
         {features.map((feature, index) => (
 

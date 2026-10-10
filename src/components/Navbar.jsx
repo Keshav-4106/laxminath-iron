@@ -1,26 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useSyncExternalStore } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HiOutlineMenuAlt3, HiX } from "react-icons/hi";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 
 import { navLinks } from "../data/navLinks";
+import { whatsappUrl } from "../config/site";
+import { subscribeTheme, getThemeSnapshot, getThemeServerSnapshot, setDarkMode } from "../lib/themeStore";
 
 const Navbar = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    if (savedMode === "true") return true;
-    if (!savedMode && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return true;
-    }
-    return false;
-  });
+  const isDarkMode = useSyncExternalStore(subscribeTheme, getThemeSnapshot, getThemeServerSnapshot);
 
   // Automatically close mobile menu on route change
- // Safely close mobile menu asynchronously on route changes
   useEffect(() => {
     const closeMenuTimeout = setTimeout(() => {
       setIsOpen(false);
@@ -66,12 +60,7 @@ const Navbar = () => {
     }
   }, [isDarkMode]);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode((prev) => {
-      localStorage.setItem("darkMode", !prev);
-      return !prev;
-    });
-  };
+  const toggleDarkMode = () => setDarkMode(!isDarkMode);
 
   // Route matching with nested pages support
   const isActive = (path) => {
@@ -148,7 +137,7 @@ const Navbar = () => {
 
             {/* WHATSAPP ACTION */}
             <a
-              href="https://wa.me/918824841765"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="ml-2 flex items-center gap-2 bg-green-500 hover:bg-green-600 px-5 py-3 rounded-xl font-black text-white text-sm transition-all duration-300 hover:scale-105 shadow-xl shadow-green-500/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
@@ -164,7 +153,8 @@ const Navbar = () => {
               aria-label="Toggle Theme Mode"
               className="ml-1 w-11 h-11 rounded-xl flex items-center justify-center bg-white/10 border border-white/5 backdrop-blur-md text-white hover:bg-white/20 hover:scale-105 transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             >
-              {isDarkMode ? <FiSun size={19} className="text-amber-400" /> : <FiMoon size={19} />}
+              <FiSun size={19} className="hidden text-amber-400 dark:block" />
+              <FiMoon size={19} className="dark:hidden" />
             </button>
           </div>
 
@@ -174,9 +164,10 @@ const Navbar = () => {
               type="button"
               onClick={toggleDarkMode}
               aria-label="Toggle Theme Mode"
-              className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/10 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+              className="w-11 h-11 rounded-xl flex items-center justify-center bg-white/10 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             >
-              {isDarkMode ? <FiSun size={18} className="text-amber-400" /> : <FiMoon size={18} />}
+              <FiSun size={18} className="hidden text-amber-400 dark:block" />
+              <FiMoon size={18} className="dark:hidden" />
             </button>
 
             <button
@@ -185,7 +176,7 @@ const Navbar = () => {
               aria-expanded={isOpen}
               aria-controls="mobile-navigation"
               aria-label="Toggle Menu"
-              className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/10 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
+              className="w-11 h-11 rounded-xl flex items-center justify-center bg-white/10 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400"
             >
               <HiOutlineMenuAlt3 size={24} />
             </button>
@@ -249,7 +240,7 @@ const Navbar = () => {
               ))}
 
               <a
-                href="https://wa.me/918824841765"
+                href={whatsappUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setIsOpen(false)}

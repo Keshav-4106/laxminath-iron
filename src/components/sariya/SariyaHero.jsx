@@ -1,4 +1,5 @@
 import React from "react";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 
 import {
@@ -10,7 +11,8 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-import heroImage from "../../assets/sariya/hero-sariya.jpg";
+import heroImage from "../../assets/sariya/hero-sariya.webp";
+import { whatsappUrl, TEL_URL } from "../../config/site";
 
 const SariyaHero = () => {
 
@@ -21,7 +23,7 @@ const SariyaHero = () => {
       {/* Background Image */}
       <motion.img
         src={heroImage}
-        alt="Polaad TMT Sariya"
+        alt="Polaad QST Fe 550D TMT Sariya bars"
         initial={{ scale: 1.15 }}
         animate={{ scale: 1 }}
         transition={{
@@ -72,24 +74,24 @@ const SariyaHero = () => {
 
             <FiCheckCircle />
 
-            Trusted Construction Material Supplier
+            Authorised Polaad Dealer
 
           </div>
 
           {/* Heading */}
           <h1 className="text-4xl md:text-6xl font-black text-white leading-tight drop-shadow-2xl">
 
-            Premium Polaad TMT Sariya
-            Supplier in Bassi, Chittorgarh
+            Polaad QST Fe 550D TMT Sariya
+            in Bassi, Chittorgarh
 
           </h1>
 
           {/* Description */}
           <p className="mt-6 text-lg md:text-xl text-slate-200 leading-8">
 
-            Strong construction starts with quality steel.
-            Get premium Polaad TMT bars, binding wire
-            and construction materials with fast local delivery.
+            Polaad QST Fe 550D TMT bars in 8 mm to 25 mm, with
+            indicative daily rates and delivery across Bassi,
+            Chittorgarh and nearby regions.
 
           </p>
 
@@ -97,7 +99,7 @@ const SariyaHero = () => {
           <div className="flex flex-wrap gap-5 mt-10">
 
             <a
-              href="https://wa.me/918824841765"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 hover:scale-105"
@@ -110,7 +112,7 @@ const SariyaHero = () => {
             </a>
 
             <a
-              href="tel:+918824841765"
+              href={TEL_URL}
               className="bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 backdrop-blur-md"
             >
 
@@ -132,4 +134,4 @@ const SariyaHero = () => {
 
 };
 
-export default SariyaHero;
+export default SariyaHero;

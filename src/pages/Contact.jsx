@@ -1,485 +1,170 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
-import ContactHero from "../components/contact/ContactHero";
-
+import PageSeo from "../components/PageSeo";
+import { FaTruck, FaCheckCircle, FaMapMarkerAlt, FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FiAward, FiFileText, FiClock } from "react-icons/fi";
 import {
-  FaWhatsapp,
-  FaPhoneAlt,
-  FaMapMarkerAlt,
-  FaTruck,
-  FaCheckCircle,
-} from "react-icons/fa";
+  PROPRIETOR,
+  FOUNDED_YEAR,
+  yearsInBusiness,
+  whatsappUrl,
+  MAPS_URL,
+  MAPS_EMBED_URL,
+  ADDRESS_LINE,
+  OPENING_HOURS,
+  INSTAGRAM_URL,
+  INSTAGRAM_HANDLE,
+  GST_NOTE,
+  DELIVERY_NOTE,
+  LABOUR_NOTE,
+} from "../config/site";
 
-import { MdEmail } from "react-icons/md";
+// Components Imports Matrix
+import ContactHero from "../components/contact/ContactHero";
+import InquiryForm from "../components/contact/InquiryForm";
+import ContactCards from "../components/contact/ContactCards";
+import ProductCatalogMap from "../components/contact/ProductCatalogMap";
+import FinalCTA from "../components/sariya/FinalCTA";
 
-import contactHero from "../assets/sariya/contact-hero.png";
-import constructionSite from "../assets/sariya/construction-site.jpeg";
-import deliveryTruck from "../assets/sariya/delivery-truck.jpeg";
-import polaadImg from "../assets/sariya/polaad-logo.png";
+import deliveryTruck from "../assets/sariya/delivery-truck.webp";
 
+const trustItems = [
+  { title: "Years of Local Trust", showYears: true, description: `Proprietor ${PROPRIETOR} ji has served homeowners and builders in Bassi since ${FOUNDED_YEAR}.`, icon: FiAward },
+  { title: "Authorised by Both Brands", description: "Authorised Polaad dealer and MP Birla Cement authorised stockist. Certificates are available to see.", icon: FaCheckCircle },
+  { title: "GST Invoice on Request", description: GST_NOTE, icon: FiFileText },
+  { title: "Own Delivery Vehicles", description: "Delivery through our Tata CNG auto and tractor. Transport charges apply.", icon: FaTruck },
+];
 
 const Contact = () => {
   return (
     <>
-    <Helmet>
+      <PageSeo
+        title="Contact Laxminath Iron | Polaad TMT Dealer & MP Birla Cement Stockist"
+        description="Contact Laxminath Iron, Bassi, Chittorgarh: Polaad TMT Sariya and MP Birla Cement. Today's rates on WhatsApp. Open Mon–Sat, 8 AM – 8 PM."
+        path="/contact"
+        image="/og/home.jpg"
+        imageAlt="Laxminath Iron shop in Bassi with Polaad sariya"
+        keywords="Laxminath Iron contact, Polaad TMT dealer Bassi, MP Birla Cement stockist Bassi, construction material Chittorgarh, लक्ष्मीनाथ आयरन बस्सी, सरिया सीमेंट दुकान बस्सी"
+      />
 
-  <title>
-    Contact Laxminath Iron | Construction Material Supplier in Bassi
-  </title>
-
-  <meta
-    name="description"
-    content="Contact Laxminath Iron for TMT Sariya, Cement and construction material supply in Bassi, Chittorgarh."
-  />
-
-  <meta
-    name="keywords"
-    content="Laxminath Iron contact, construction supplier Bassi, cement dealer Chittorgarh"
-  />
-
-</Helmet>
-    <div className="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden">
-
-      {/* Hero Section */}
-
+      <div className="min-h-screen overflow-hidden bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-white">
         <ContactHero />
 
+        {/* 1. TOP DYNAMIC QUICK INQUIRY FORM */}
+        <InquiryForm />
 
+        {/* 2. CORE QUICK CONTACT CHANNELS */}
+        <ContactCards />
 
-      {/* ================= QUICK CONTACT ================= */}
+        {/* 3. BUSINESS WHAT WE SUPPLY HUB */}
+        <ProductCatalogMap />
 
-      <section className="max-w-7xl mx-auto px-6 py-20">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-          {/* Phone */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 hover:-translate-y-2 transition duration-300">
-
-            <div className="w-16 h-16 rounded-2xl bg-orange-100 dark:bg-orange-500/10 flex items-center justify-center text-orange-500 text-2xl mb-6">
-
-              <FaPhoneAlt />
-
+        {/* 4. OPERATIONAL TRUST ACCREDITATION GRID */}
+        <section className="bg-slate-900 py-24 text-white">
+          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+            <div className="mx-auto mb-14 max-w-3xl text-center">
+              <span className="text-xs font-bold uppercase tracking-[0.22em] text-orange-400">Why Choose Us</span>
+              <h2 className="mt-3 text-4xl font-black tracking-tight md:text-5xl">Trusted Local Construction Material Supplier</h2>
+              <p className="mt-5 text-slate-400">Real business experience, genuine materials, clear billing and practical delivery support.</p>
             </div>
-
-            <h3 className="text-2xl font-bold mb-3">
-              Call Us
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400 mb-5">
-              Directly contact us for material inquiry.
-            </p>
-
-            <a
-              href="tel:+918824841765"
-              className="font-bold text-orange-500"
-            >
-              +91 8824841765
-            </a>
-
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              {trustItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <article key={item.title} className="rounded-3xl border border-slate-700 bg-slate-800 p-7 transition duration-300 hover:-translate-y-2 hover:border-orange-500/50">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500/15 text-2xl text-orange-400">
+                      <Icon />
+                    </div>
+                    <h3 className="mt-6 text-xl font-black">
+                      {item.showYears && <span suppressHydrationWarning>{yearsInBusiness()} </span>}
+                      {item.title}
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-400">{item.description}</p>
+                  </article>
+                );
+              })}
+            </div>
           </div>
+        </section>
 
-
-
-          {/* WhatsApp */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 hover:-translate-y-2 transition duration-300">
-
-            <div className="w-16 h-16 rounded-2xl bg-green-100 dark:bg-green-500/10 flex items-center justify-center text-green-500 text-2xl mb-6">
-
-              <FaWhatsapp />
-
-            </div>
-
-            <h3 className="text-2xl font-bold mb-3">
-              WhatsApp
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400 mb-5">
-              Get quotation instantly on WhatsApp.
-            </p>
-
-            <a
-              href="https://wa.me/918824841765"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold text-green-500"
-            >
-              Chat Now
-            </a>
-
-          </div>
-
-
-
-          {/* Email */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 hover:-translate-y-2 transition duration-300">
-
-            <div className="w-16 h-16 rounded-2xl bg-blue-100 dark:bg-blue-500/10 flex items-center justify-center text-blue-500 text-2xl mb-6">
-
-              <MdEmail />
-
-            </div>
-
-            <h3 className="text-2xl font-bold mb-3">
-              Email
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400 mb-5">
-              Send us your requirement details anytime.
-            </p>
-
-            <p className="font-bold text-blue-500 break-all">
-              laxminathiron@gmail.com
-            </p>
-
-          </div>
-
-
-
-          {/* Location */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 hover:-translate-y-2 transition duration-300">
-
-            <div className="w-16 h-16 rounded-2xl bg-red-100 dark:bg-red-500/10 flex items-center justify-center text-red-500 text-2xl mb-6">
-
-              <FaMapMarkerAlt />
-
-            </div>
-
-            <h3 className="text-2xl font-bold mb-3">
-              Location
-            </h3>
-
-            <p className="text-slate-500 dark:text-slate-400 mb-5">
-              Visit our material supply shop in Rajasthan.
-            </p>
-
-            <p className="font-bold text-red-500">
-              Bassi, Chittorgarh
-            </p>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      {/* ================= WHAT WE SUPPLY ================= */}
-
-      <section className="max-w-7xl mx-auto px-6 pb-20">
-
-        <div className="text-center mb-14">
-
-          <h2 className="text-4xl md:text-5xl font-black mb-5">
-            What We Supply
-          </h2>
-
-          <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto text-lg">
-            We supply trusted construction materials for residential,
-            commercial and industrial projects.
-          </p>
-
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-          {/* Sariya */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl group hover:-translate-y-2 transition duration-300">
-
-            <div className="h-64 overflow-hidden">
-
-              <img
-                src={polaadImg}
-                alt="Polaad TMT"
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-              />
-
-            </div>
-
-            <div className="p-8">
-
-              <h3 className="text-3xl font-bold mb-4">
-                Polaad TMT Sariya
-              </h3>
-
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
-                High strength and durable TMT bars for all construction needs.
+        {/* 5. DELIVERY INFORMATION LAYER */}
+        <section className="mx-auto max-w-7xl px-5 py-24 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.22em] text-orange-500">Delivery Information</span>
+              <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Self-Pickup and Local Delivery Support</h2>
+              <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+                You can collect material in your own vehicle or ask us to deliver it in ours. {DELIVERY_NOTE}
               </p>
-
-            </div>
-
-          </div>
-
-
-
-          {/* Cement */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl group hover:-translate-y-2 transition duration-300">
-
-            <div className="h-64 overflow-hidden">
-
-              <img
-                src={constructionSite}
-                alt="Cement"
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-              />
-
-            </div>
-
-            <div className="p-8">
-
-              <h3 className="text-3xl font-bold mb-4">
-                MP Birla Cement
-              </h3>
-
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
-                Premium quality cement for strong and long-lasting construction.
-              </p>
-
-            </div>
-
-          </div>
-
-
-
-          {/* Scrap */}
-          <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl group hover:-translate-y-2 transition duration-300">
-
-            <div className="h-64 overflow-hidden">
-
-              <img
-                src={deliveryTruck}
-                alt="Scrap"
-                className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
-              />
-
-            </div>
-
-            <div className="p-8">
-
-              <h3 className="text-3xl font-bold mb-4">
-                Scrap Materials
-              </h3>
-
-              <p className="text-slate-500 dark:text-slate-400 leading-relaxed">
-                Daily updated scrap rates and material availability support.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      {/* ================= TRUST SECTION ================= */}
-
-      <section className="bg-slate-900 text-white py-20">
-
-        <div className="max-w-7xl mx-auto px-6">
-
-          <div className="text-center mb-14">
-
-            <h2 className="text-4xl md:text-5xl font-black mb-5">
-              Why Choose Us
-            </h2>
-
-            <p className="text-slate-400 text-lg">
-              Trusted by local contractors, builders and homeowners.
-            </p>
-
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-
-            {[
-              "20+ Years Experience",
-              "GST Registered",
-              "Free Delivery in Bassi",
-              "Fast Material Supply",
-              "Own Transport Vehicles",
-            ].map((item, index) => (
-
-              <div
-                key={index}
-                className="bg-slate-800 rounded-3xl p-6 border border-slate-700 text-center"
-              >
-
-                <div className="w-14 h-14 mx-auto rounded-2xl bg-orange-500/20 flex items-center justify-center text-orange-400 text-2xl mb-5">
-
-                  <FaCheckCircle />
-
-                </div>
-
-                <h3 className="font-bold text-lg leading-relaxed">
-                  {item}
-                </h3>
-
-              </div>
-
-            ))}
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      {/* ================= DELIVERY AREAS ================= */}
-
-      <section className="max-w-7xl mx-auto px-6 py-20">
-
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-
-          <div>
-
-            <h2 className="text-4xl md:text-5xl font-black mb-6 leading-tight">
-
-              Fast Delivery Across
-              Nearby Areas
-
-            </h2>
-
-            <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed mb-8">
-
-              We provide fast and reliable construction material delivery
-              across Bassi and nearby villages using our own transport vehicles.
-
-            </p>
-
-            <div className="space-y-4">
-
-              {[
-                "Free Delivery in Bassi",
-                "Chittorgarh Nearby Areas",
-                "Begun Side Delivery",
-                "Rawatbhata Side Delivery",
-                "Quick Loading Support",
-              ].map((area, index) => (
-
-                <div
-                  key={index}
-                  className="flex items-center gap-4"
-                >
-
-                  <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-500/10 flex items-center justify-center text-orange-500">
-
-                    <FaTruck />
-
+              <div className="mt-8 space-y-5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500"><FaTruck /></div>
+                  <div>
+                    <h3 className="font-black">Self-Pickup or Delivery</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">Choose self-pickup or delivery when you send your enquiry.</p>
                   </div>
-
-                  <span className="font-semibold text-lg">
-                    {area}
-                  </span>
-
                 </div>
-
-              ))}
-
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500"><FaCheckCircle /></div>
+                  <div>
+                    <h3 className="font-black">Delivery Area</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">Bassi, Chittorgarh and nearby regions. Transport charges depend on distance and quantity.</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/10 text-orange-500"><FiFileText /></div>
+                  <div>
+                    <h3 className="font-black">Labour Charges</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-slate-500 dark:text-slate-400">{LABOUR_NOTE}</p>
+                  </div>
+                </div>
+              </div>
+              <a href={whatsappUrl("Hello Laxminath Iron, I want to confirm material delivery details.")} target="_blank" rel="noopener noreferrer" className="mt-9 inline-flex items-center gap-3 rounded-2xl bg-green-500 px-7 py-4 font-black text-white transition duration-300 hover:-translate-y-1 hover:bg-green-600">
+                <FaWhatsapp className="text-xl" /> Confirm Delivery Details
+              </a>
             </div>
-
+            <div className="overflow-hidden rounded-[34px] border border-slate-200 shadow-2xl dark:border-slate-800">
+              <img src={deliveryTruck} alt="Laxminath Iron local delivery vehicle" loading="lazy" width="750" height="1000" className="min-h-[430px] w-full object-cover" />
+            </div>
           </div>
+        </section>
 
-          <div className="rounded-3xl overflow-hidden shadow-2xl">
-
-            <img
-              src={deliveryTruck}
-              alt="Delivery"
-              className="w-full h-full object-cover"
-            />
-
+        {/* 6. GOOGLE MAP EMBED FRAME */}
+        <section className="mx-auto max-w-7xl px-5 pb-24 lg:px-8">
+          <div className="overflow-hidden rounded-[36px] border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+            <div className="grid lg:grid-cols-[360px_1fr]">
+              <div className="flex flex-col justify-between p-8 md:p-10">
+                <div>
+                  <span className="text-xs font-bold uppercase tracking-[0.22em] text-orange-500">Store Location</span>
+                  <h2 className="mt-4 text-3xl font-black">Visit Our Shop</h2>
+                  <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{ADDRESS_LINE}</p>
+                  <p className="mt-4 flex items-center gap-2 text-sm font-bold"><FiClock className="text-orange-500" /> {OPENING_HOURS.label}</p>
+                </div>
+                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-4 text-sm font-black text-white transition hover:bg-orange-500 hover:text-black dark:bg-slate-950">
+                  <FaMapMarkerAlt /> Open in Google Maps
+                </a>
+              </div>
+              <div className="h-[480px] lg:h-[520px]">
+                <iframe src={MAPS_EMBED_URL} title="Laxminath Iron Location" className="h-full w-full border-0" loading="lazy" allowFullScreen referrerPolicy="no-referrer-when-downgrade" />
+              </div>
+            </div>
           </div>
+        </section>
 
-        </div>
-
-      </section>
-
-
-
-      {/* ================= GOOGLE MAP ================= */}
-
-      <section className="max-w-7xl mx-auto px-6 pb-20">
-
-        <div className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl">
-
-          <div className="p-8 border-b border-slate-200 dark:border-slate-800">
-
-            <h2 className="text-4xl font-black mb-3">
-              Visit Our Shop
-            </h2>
-
-            <p className="text-slate-500 dark:text-slate-400 text-lg">
-              Find us easily on Google Maps and visit our material yard.
-            </p>
-
-          </div>
-
-          <div className="w-full h-[500px]">
-
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3615.886402786943!2d74.75340787446355!3d25.00397567783586!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3968a5b7ad19fa15%3A0xbf3fb6e991cc56cb!2sLaxminath%20iron!5e0!3m2!1sen!2sin!4v1778757928946!5m2!1sen!2sin"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Laxminath Iron Location"
-            ></iframe>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      {/* ================= FINAL CTA ================= */}
-
-      <section className="pb-24">
-
-        <div className="max-w-5xl mx-auto px-6">
-
-          <div className="bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 rounded-[40px] p-10 md:p-16 text-center text-black shadow-2xl">
-
-            <h2 className="text-4xl md:text-6xl font-black leading-tight mb-6">
-
-              Need Construction Materials?
-
-            </h2>
-
-            <p className="text-lg md:text-xl font-medium mb-10 max-w-3xl mx-auto">
-
-              Contact us now for fast quotation,
-              delivery support and genuine construction materials.
-
-            </p>
-
-            <a
-              href="https://wa.me/918824841765?text=Hello%20Laxminath%20Iron,%20I%20want%20construction%20materials."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-4 bg-black hover:bg-slate-900 text-white px-10 py-5 rounded-2xl font-bold text-xl transition duration-300 hover:scale-105 shadow-2xl"
-            >
-
-              <FaWhatsapp size={28} />
-
-              Get Instant Quote
-
+        {/* 7. SOCIAL LINK ACTION LAYER */}
+        <section className="mx-auto max-w-7xl px-5 pb-10 lg:px-8">
+          <div className="flex flex-col items-start justify-between gap-6 rounded-3xl border border-slate-200 bg-white p-7 shadow-lg dark:border-slate-800 dark:bg-slate-900 sm:flex-row sm:items-center">
+            <div>
+              <h2 className="text-xl font-black">Follow Laxminath Iron</h2>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Instagram: {INSTAGRAM_HANDLE}</p>
+            </div>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 rounded-2xl bg-pink-500 px-6 py-3.5 font-black text-white transition duration-300 hover:-translate-y-1 hover:bg-pink-600">
+              <FaInstagram /> Open Instagram
             </a>
-
           </div>
+        </section>
 
-        </div>
-
-      </section>
-
-    </div>
+        <FinalCTA title="Need Construction Materials?" description="Contact Laxminath Iron for today's Polaad TMT Sariya and MP Birla Cement rates, availability and delivery details." />
+      </div>
     </>
   );
 };

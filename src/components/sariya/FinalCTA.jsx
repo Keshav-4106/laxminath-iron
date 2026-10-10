@@ -1,124 +1,79 @@
 import React from "react";
+import { FaWhatsapp } from "react-icons/fa";
+import { FiPhoneCall, FiTruck, FiShield } from "react-icons/fi";
+import { whatsappUrl, TEL_URL } from "../../config/site";
 
-import {
-  FaWhatsapp,
-} from "react-icons/fa";
-
-import {
-  FiPhoneCall,
-  FiTruck,
-  FiShield,
-} from "react-icons/fi";
-
-const FinalCTA = () => {
+const FinalCTA = ({
+  title = "Ready to Order Polaad TMT Sariya?",
+  description = "Contact Laxminath Iron for today's rates, availability and delivery details.",
+  trustLabel = "Trusted Construction Material Supplier",
+}) => {
   return (
-    <section className="mt-24">
+    <section className="mx-auto my-16 max-w-7xl px-5 lg:px-8">
+      <div className="relative overflow-hidden rounded-[40px] bg-gradient-to-br from-orange-500 via-orange-600 to-amber-500 p-8 shadow-2xl md:p-14">
+        {/* Background Glow Overlay */}
+        <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-white/10 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-black/10 blur-3xl pointer-events-none" />
 
-      <div className="relative overflow-hidden bg-gradient-to-br from-orange-500 via-orange-600 to-amber-500 rounded-[40px] p-8 md:p-14 shadow-2xl">
-
-        {/* Background Glow */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl"></div>
-
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-black/10 rounded-full blur-3xl"></div>
-
-        <div className="relative z-10 grid lg:grid-cols-[1fr_auto] gap-10 items-center">
-
-          {/* LEFT */}
+        <div className="relative z-10 grid items-center gap-10 lg:grid-cols-[1fr_auto]">
+          {/* Left Content */}
           <div>
-
-            <div className="inline-flex items-center gap-3 bg-white/10 border border-white/20 px-5 py-3 rounded-2xl backdrop-blur-md mb-6">
-
-              <FiShield className="text-white text-xl" />
-
+            <div className="mb-6 inline-flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 backdrop-blur-md">
+              <FiShield className="text-xl text-white" />
               <span className="font-semibold text-white">
-                Trusted Construction Material Supplier
+                {trustLabel}
               </span>
-
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
-
-              Ready to Order
-              Premium Polaad TMT
-              Sariya?
-
+            <h2 className="text-4xl font-black leading-tight text-white md:text-5xl">
+              {title}
             </h2>
 
-            <p className="mt-6 text-lg text-orange-50 leading-8 max-w-3xl">
-
-              Contact Laxminath Iron today for
-              latest rates, stock availability,
-              delivery support and construction
-              material guidance.
-
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-orange-50">
+              {description}
             </p>
 
-            {/* Features */}
-            <div className="flex flex-wrap gap-4 mt-8">
-
-              <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-5 py-3 rounded-2xl text-white backdrop-blur-md">
-
+            {/* Badges */}
+            <div className="mt-8 flex flex-wrap gap-4">
+              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-3 text-white backdrop-blur-md">
                 <FiTruck />
-
-                Fast Delivery
-
+                Delivery Support
               </div>
 
-              <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-5 py-3 rounded-2xl text-white backdrop-blur-md">
-
+              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-3 text-white backdrop-blur-md">
                 <FiShield />
-
-                Trusted Quality
-
+                Authorised Brands
               </div>
 
-              <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-5 py-3 rounded-2xl text-white backdrop-blur-md">
-
+              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/10 px-5 py-3 text-white backdrop-blur-md">
                 <FiPhoneCall />
-
                 Quick Support
-
               </div>
-
             </div>
-
           </div>
 
-          {/* RIGHT */}
+          {/* Right Action Buttons */}
           <div className="flex flex-col gap-5">
-
-            {/* WhatsApp */}
             <a
-              href="https://wa.me/918824841765"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-white hover:bg-slate-100 text-orange-500 px-8 py-5 rounded-3xl font-black text-lg flex items-center justify-center gap-4 shadow-2xl transition duration-300 hover:scale-105 min-w-[300px]"
+              className="group flex min-w-[280px] items-center justify-center gap-4 rounded-3xl bg-white px-8 py-5 text-lg font-black text-orange-600 shadow-2xl transition duration-300 hover:scale-105 hover:bg-slate-100"
             >
-
-              <FaWhatsapp className="text-3xl group-hover:scale-110 transition duration-300" />
-
+              <FaWhatsapp className="text-3xl text-green-600 transition duration-300 group-hover:scale-110" />
               Chat on WhatsApp
-
             </a>
 
-            {/* Call */}
             <a
-              href="tel:+918824841765"
-              className="group bg-black/20 hover:bg-black/30 border border-white/20 text-white px-8 py-5 rounded-3xl font-black text-lg flex items-center justify-center gap-4 backdrop-blur-md transition duration-300 hover:scale-105 min-w-[300px]"
+              href={TEL_URL}
+              className="group flex min-w-[280px] items-center justify-center gap-4 rounded-3xl border border-white/20 bg-black/20 px-8 py-5 text-lg font-black text-white backdrop-blur-md transition duration-300 hover:scale-105 hover:bg-black/30"
             >
-
-              <FiPhoneCall className="text-2xl group-hover:rotate-12 transition duration-300" />
-
+              <FiPhoneCall className="text-2xl transition duration-300 group-hover:rotate-12" />
               Call Now
-
             </a>
-
           </div>
-
         </div>
-
       </div>
-
     </section>
   );
 };

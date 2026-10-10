@@ -5,7 +5,8 @@ import { FaWhatsapp } from "react-icons/fa";
 import { FiPhoneCall, FiCheckCircle } from "react-icons/fi";
 
 // Cement Hero Background Image Asset
-import cementHero from "../../assets/cement-hero.jpg"; 
+import cementHero from "../../assets/cement-hero.webp";
+import { whatsappUrl, TEL_URL } from "../../config/site";
 
 const CementHero = () => {
   return (
@@ -14,7 +15,7 @@ const CementHero = () => {
       {/* 1. Background Image - Dynamic Scale-down transition */}
       <motion.img
         src={cementHero}
-        alt="Premium MP Birla Cement Dealer"
+        alt="MP Birla Cement bags"
         initial={{ scale: 1.15 }}
         animate={{ scale: 1 }}
         transition={{
@@ -59,23 +60,23 @@ const CementHero = () => {
           {/* Top Badge Component */}
           <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 text-orange-300 px-5 py-2 rounded-full mb-6 backdrop-blur-md">
             <FiCheckCircle />
-            Authorized MP Birla Cement Dealer
+            MP Birla Cement Authorised Stockist
           </div>
 
           {/* Heading Component */}
           <h1 className="text-4xl md:text-6xl font-black text-white leading-tight drop-shadow-2xl">
-            Premium MP Birla Cement Supplier in Bassi, Chittorgarh
+            MP Birla Cement in Bassi, Chittorgarh
           </h1>
 
           {/* Description Block */}
           <p className="mt-6 text-lg md:text-xl text-slate-200 leading-8">
-            Strong foundation starts with premium quality cement. Get genuine MP Birla Cement products with trusted local delivery and best market wholesale rates.
+            Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist. Indicative daily rates, GST invoice on request and delivery across Bassi, Chittorgarh and nearby regions.
           </p>
 
           {/* Action Row */}
           <div className="flex flex-wrap gap-5 mt-10">
             <a
-              href="https://wa.me/918824841765"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 hover:scale-105"
@@ -84,7 +85,7 @@ const CementHero = () => {
               Get Instant Quote
             </a>
             <a
-              href="tel:+918824841765"
+              href={TEL_URL}
               className="bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 backdrop-blur-md"
             >
               <FiPhoneCall />

@@ -11,7 +11,8 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 
-import contactHero from "../../assets/sariya/construction-site.jpeg";
+import contactHero from "../../assets/sariya/construction-site.webp";
+import { whatsappUrl, TEL_URL } from "../../config/site";
 
 const ContactHero = () => {
 
@@ -22,7 +23,7 @@ const ContactHero = () => {
       {/* Background Image */}
       <motion.img
         src={contactHero}
-        alt="Contact Laxminath Iron"
+        alt="Construction site"
         initial={{ scale: 1.15 }}
         animate={{ scale: 1 }}
         transition={{
@@ -88,9 +89,8 @@ const ContactHero = () => {
           {/* Description */}
           <p className="mt-6 text-lg md:text-xl text-slate-200 leading-8">
 
-             Contact us for premium Polaad TMT Sariya,
-            binding wire, cement and construction materials
-            in Bassi & nearby areas.
+            Contact us for Polaad QST Fe 550D TMT Sariya and
+            MP Birla Cement in Bassi, Chittorgarh and nearby regions.
 
           </p>
 
@@ -98,7 +98,7 @@ const ContactHero = () => {
           <div className="flex flex-wrap gap-5 mt-10">
 
              <a
-              href="https://wa.me/918824841765"
+              href={whatsappUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 hover:scale-105"
@@ -111,7 +111,7 @@ const ContactHero = () => {
             </a>
 
             <a
-              href="tel:+918824841765"
+              href={TEL_URL}
               className="bg-white/10 hover:bg-white/20 border border-white/10 text-white px-8 py-4 rounded-2xl font-bold flex items-center gap-3 transition duration-300 backdrop-blur-md"
             >
 

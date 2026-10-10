@@ -1,117 +1,68 @@
 import { Helmet } from "react-helmet-async";
+import {
+  SITE_URL,
+  BUSINESS_NAME,
+  PHONE_E164,
+  EMAIL,
+  ADDRESS,
+  GEO,
+  OPENING_HOURS,
+  FOUNDED_YEAR,
+} from "../config/site";
 
 const LocalBusinessSchema = () => {
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "HardwareStore",
-
-    name: "Laxminath Iron",
-
-    image:
-      "https://www.laxminathiron.in/hero-sariya.jpg",
-
-    "@id":
-      "https://www.laxminathiron.in",
-
-    url:
-      "https://www.laxminathiron.in",
-
-    telephone:
-      "+91 8824841765",
-
+    "@id": `${SITE_URL}/#business`,
+    name: BUSINESS_NAME,
+    url: SITE_URL,
+    image: `${SITE_URL}/og/home.jpg`,
+    telephone: PHONE_E164,
+    email: EMAIL,
+    foundingDate: String(FOUNDED_YEAR),
+    priceRange: "₹₹",
+    description:
+      "Authorised Polaad dealer (Polaad QST Fe 550D TMT bars) and MP Birla Cement authorised stockist in Bassi, Chittorgarh, Rajasthan.",
     address: {
       "@type": "PostalAddress",
-
-      streetAddress:
-        "Bassi",
-
-      addressLocality:
-        "Chittorgarh",
-
-      addressRegion:
-        "Rajasthan",
-
-      postalCode:
-        "312022",
-
-      addressCountry:
-        "IN",
+      streetAddress: ADDRESS.street,
+      addressLocality: ADDRESS.locality,
+      addressRegion: ADDRESS.region,
+      postalCode: ADDRESS.postalCode,
+      addressCountry: ADDRESS.country,
     },
-
     geo: {
       "@type": "GeoCoordinates",
-
-      latitude: "25.0039756",
-
-      longitude: "74.7534078",
+      latitude: GEO.latitude,
+      longitude: GEO.longitude,
     },
-
     openingHoursSpecification: {
-      "@type":
-        "OpeningHoursSpecification",
-
-      dayOfWeek: [
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ],
-
-      opens: "08:00",
-
-      closes: "20:00",
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: OPENING_HOURS.days,
+      opens: OPENING_HOURS.opens,
+      closes: OPENING_HOURS.closes,
     },
-
-    sameAs: [
-      "https://wa.me/918824841765",
-    ],
-
-    priceRange: "₹₹",
-
-    description:
-      "Premium supplier of Polaad TMT Sariya, MP Birla Cement, Scrap and construction materials in Bassi, Chittorgarh.",
-
     areaServed: [
-      "Bassi",
-      "Chittorgarh",
-      "Begun",
-      "Nearby Villages",
+      { "@type": "City", name: "Bassi" },
+      { "@type": "City", name: "Chittorgarh" },
     ],
-
     makesOffer: [
       {
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Product",
-          name: "Polaad TMT Sariya",
-        },
+        itemOffered: { "@type": "Product", name: "Polaad QST Fe 550D TMT bars" },
       },
-
       {
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Product",
-          name: "MP Birla Cement",
-        },
-      },
-
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Product",
-          name: "Binding Wire",
-        },
+        itemOffered: { "@type": "Product", name: "MP Birla Cement" },
       },
     ],
+    // sameAs intentionally omitted until a Google Business Profile exists.
   };
 
   return (
     <Helmet>
-      <script type="application/ld+json">
-        {JSON.stringify(schemaData)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
     </Helmet>
   );
 };

@@ -1,216 +1,253 @@
-import React, { useState, useMemo } from "react";
-import { cementData } from "../data/cementData";
-import ProductCard from "../components/ProductCard";
-import { Helmet } from "react-helmet-async";
-import { 
-  FaWhatsapp, 
-  FaTruck, 
-  FaShieldAlt, 
-  FaCalculator, 
-  FaExclamationTriangle 
-} from "react-icons/fa";
-import { MdVerified } from "react-icons/md";
+import React, { useMemo } from "react";
+import PageSeo from "../components/PageSeo";
+import { FiTruck, FiShield, FiAward } from "react-icons/fi";
+import {
+  getProducts,
+  latestUpdate,
+  formatDate,
+  formatRupees,
+  hasPrice,
+  gstLabel,
+  isOrderable,
+  AVAILABILITY_LABELS,
+} from "../data/catalog";
 
-// Naya imported component wrapper
 import CementHero from "../components/cement/CementHero"; 
+import FinalCTA from "../components/sariya/FinalCTA";
+import birlaCertificate from "../assets/mp-birla-certificate.webp";
+import { GST_NOTE, DELIVERY_NOTE, LABOUR_NOTE } from "../config/site";
+import { useEnquiry } from "../context/enquiryContext";
+import EnquirySummaryCard from "../components/EnquirySummaryCard";
+
+const CEMENT_ITEMS = getProducts("cement");
+const RATES_UPDATED = latestUpdate(CEMENT_ITEMS);
+
+const BADGE_STYLES = {
+  in_stock: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  out_of_stock: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20",
+  ask: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20",
+};
+
+const unitLabel = (unit, n) => {
+  const word = unit.charAt(0).toUpperCase() + unit.slice(1);
+  return n === 1 ? word : `${word}s`;
+};
 
 const Cement = () => {
-  // -----------------------------
-  // STATES
-  // -----------------------------
-  const [quantities, setQuantities] = useState({});
-  const [deliveryMode, setDeliveryMode] = useState("delivery"); 
-  const [distance, setDistance] = useState(""); 
+  const { quantities, setQty, changeQty } = useEnquiry();
 
-  const CNG_PRICE = 85;      
-  const DIESEL_PRICE = 90;    
+  const handleQuantityChange = (id, delta) => changeQty(id, delta);
+  const handleInputChange = (id, val) => setQty(id, val === "" ? 0 : val);
 
-  const handleQuantityChange = (productName, qty) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [productName]: qty,
-    }));
-  };
-
-  // -----------------------------
-  // LIVE CALCULATIONS
-  // -----------------------------
-  const { totalBags, rawMaterialTotal, totalWeight } = useMemo(() => {
-    let bags = 0;
-    let total = 0;
-    cementData.products.forEach((product) => {
-      const qty = quantities[product.name] || 0;
-      bags += qty;
-      total += qty * product.price;
-    });
-    return { totalBags: bags, rawMaterialTotal: total, totalWeight: bags * 50 };
-  }, [quantities]);
-
-  // -----------------------------
-  // LOGISTICS ALGORITHM
-  // -----------------------------
-  const logistics = useMemo(() => {
-    if (deliveryMode === "pickup") {
-      return { freightCharge: 0, vehicleUsed: "Customer Vehicle", isValid: true, error: "" };
-    }
-    if (distance === "" || distance <= 0) {
-      return { freightCharge: 0, vehicleUsed: "Not Selected", isValid: false, error: "Enter valid distance for delivery fare." };
-    }
-    const roundTripDistance = distance * 2; 
-
-    if (totalWeight > 10000) {
+  const calculationGrid = useMemo(() => {
+    const items = CEMENT_ITEMS.map((product) => {
+      const qty = isOrderable(product) ? quantities[product.id] || 0 : 0;
       return {
-        freightCharge: 0,
-        vehicleUsed: "NONE",
-        isValid: false,
-        error: `⚠️ Overloaded! Weight exceeds Tractor capacity.`,
+        ...product,
+        qty,
+        itemTotal: hasPrice(product) ? qty * product.price : 0,
       };
-    }
-
-    if (totalWeight <= 2500) {
-      const autoMileage = 19; 
-      const autoFuelCost = (roundTripDistance / autoMileage) * CNG_PRICE;
-      return { freightCharge: Math.round(autoFuelCost + 150), vehicleUsed: "Tata CNG Auto", isValid: true, error: "" };
-    } else {
-      const tractorMileage = 5; 
-      const tractorFuelCost = (roundTripDistance / tractorMileage) * DIESEL_PRICE;
-      return { freightCharge: Math.round(tractorFuelCost + 300), vehicleUsed: "Tractor", isValid: true, error: "" };
-    }
-  }, [deliveryMode, distance, totalWeight]);
-
-  const finalGrandTotal = rawMaterialTotal + logistics.freightCharge;
-
-  const handleWhatsAppOrderSubmit = () => {
-    let message = `*Laxminath Iron - Cement Inquiry*%0A%0A`;
-    let hasItems = false;
-    cementData.products.forEach((product) => {
-      const qty = quantities[product.name] || 0;
-      if (qty > 0) {
-        hasItems = true;
-        message += `• *${product.name}* -> ${qty} Bags%0A`;
-      }
     });
-    if (!hasItems) return;
-    message += `%0A*GRAND TOTAL:* ₹${finalGrandTotal.toLocaleString("en-IN")}`;
-    window.open(`https://wa.me/918824841765?text=${message}`, "_blank");
-  };
+
+    const totals = items.reduce(
+      (acc, product) => ({
+        totalBagsCount: acc.totalBagsCount + (product.unit === "bag" ? product.qty : 0),
+        totalBucketsCount: acc.totalBucketsCount + (product.unit === "bucket" ? product.qty : 0),
+        materialsCostTotal: acc.materialsCostTotal + product.itemTotal,
+        hasUnpriced: acc.hasUnpriced || (product.qty > 0 && !hasPrice(product)),
+        gstExtra: acc.gstExtra || (product.qty > 0 && hasPrice(product) && product.gstIncluded === false),
+      }),
+      { totalBagsCount: 0, totalBucketsCount: 0, materialsCostTotal: 0, hasUnpriced: false, gstExtra: false }
+    );
+
+    return { items, ...totals };
+  }, [quantities]);
 
   return (
     <>
-      <Helmet>
-        <title>MP Birla Cement Dealer in Bassi, Chittorgarh | Laxminath Iron</title>
-      </Helmet>
+      <PageSeo
+        title="MP Birla Cement Authorised Stockist in Bassi | Laxminath Iron"
+        description="MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist in Bassi, Chittorgarh. Indicative daily rates (+ GST) and delivery."
+        path="/cement"
+        image="/og/cement.jpg"
+        imageAlt="Stacked MP Birla cement bags"
+        keywords="MP Birla Cement Bassi, Chetak cement price, Perfect Plus cement Chittorgarh, cement rate Bassi, सीमेंट रेट बस्सी, एमपी बिरला सीमेंट, चेतक सीमेंट"
+      />
 
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden transition-colors duration-300">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 overflow-x-clip text-slate-900 dark:text-white transition-colors duration-300">
         
-        {/* DYNAMIC COMPONENT CALL - Exact look, text animation & height match */}
         <CementHero />
 
-        {/* MAIN BODY GRID WRAPPER */}
-        <div className="max-w-7xl mx-auto px-6 py-20 relative z-20 -mt-16">
-          
-          {/* TRUST CARDS PANEL */}
+        {/* TRUST STRIP */}
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-20 relative z-20 -mt-16">
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
-              <FaShieldAlt className="text-4xl text-orange-500 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Genuine Products</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">100% original MP Birla Cement products.</p>
+            
+            <div className="bg-white dark:bg-slate-900 rounded-[28px] p-6 shadow-xl border border-slate-200/80 dark:border-slate-800">
+              <FiShield className="text-4xl text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold mb-1">Check the Bag</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">You can check the ISI mark, net quantity and packing date printed on every bag.</p>
             </div>
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
-              <FaTruck className="text-4xl text-orange-500 mb-4 mx-auto" />
-              <h3 className="text-xl font-bold mb-2">Fast Delivery</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">Quick delivery metrics adjusted via load limits.</p>
+            <div className="bg-white dark:bg-slate-900 rounded-[28px] p-6 shadow-xl border border-slate-200/80 dark:border-slate-800">
+              <FiAward className="text-4xl text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold mb-1">Authorised Stockist</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm mb-4">MP Birla Cement certificate issued to Prakash Somani, Bassi.</p>
+              <img
+                src={birlaCertificate}
+                alt="MP Birla Cement certificate naming Prakash Somani, Bassi, District Chittorgarh as authorised stockist"
+                loading="lazy"
+                width="1000"
+                height="675"
+                className="h-auto max-h-64 w-full rounded-xl object-contain"
+              />
             </div>
-            <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-xl border border-slate-200 dark:border-slate-800 text-center">
-              <MdVerified className="text-4xl text-orange-500 mb-4 mx-auto" />
-              <h3 className="text-xl font-bold mb-2">Trusted Dealer</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">Transparent yard parameters and direct checkout options.</p>
+            <div className="bg-white dark:bg-slate-900 rounded-[28px] p-6 shadow-xl border border-slate-200/80 dark:border-slate-800">
+              <FiTruck className="text-4xl text-orange-500 mb-4" />
+              <h3 className="text-xl font-bold mb-1">Delivery</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">{DELIVERY_NOTE} {LABOUR_NOTE}</p>
             </div>
           </section>
 
-          {/* TWO COLUMN grid system elements layout */}
+          {/* HEADING BLOCK */}
+          <div className="mb-10 text-left">
+            <span className="text-xs font-bold uppercase tracking-widest text-orange-500 bg-orange-500/10 px-3 py-1 rounded-md">
+              Available Products
+            </span>
+            <h2 className="mt-3 text-3xl font-black tracking-tight md:text-4xl">
+              MP Birla Cement Products Available at Our Shop
+            </h2>
+            <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
+              Select the quantity you need to see an indicative amount. The final rate, availability and transport charges are confirmed on WhatsApp.
+            </p>
+            {RATES_UPDATED && (
+              <p className="mt-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+                Indicative rates last updated: {formatDate(RATES_UPDATED)}
+              </p>
+            )}
+          </div>
+
+          {/* TWO COLUMN GRID SYSTEM */}
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
-            <div className="space-y-12">
-              <section>
-                <div className="mb-8">
-                  <h2 className="text-3xl font-extrabold mb-2">Our Cement Products</h2>
+            
+            {/* LEFT SIDE CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {calculationGrid.items.map((product) => (
+                <div 
+                  key={product.id}
+                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md hover:border-orange-500/30 transition-all duration-300 flex flex-col justify-between"
+                >
+                  <div>
+                    {product.imageUrl && (
+                      <div className="mb-5 overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-950 border border-slate-200/40 dark:border-slate-800/40">
+                        <img
+                          src={product.imageUrl}
+                          width={product.imageWidth}
+                          height={product.imageHeight}
+                          alt={`${product.name} ${product.unitLabel}`}
+                          loading="lazy"
+                          className="h-56 w-full object-contain p-4"
+                        />
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <h3 className="text-xl font-black tracking-tight">{product.name}</h3>
+                        <p className="mt-1.5 text-lg font-black text-orange-500">
+                          {hasPrice(product) ? formatRupees(product.price) : "Price on request"}
+                          <span className="ml-1 text-xs font-medium text-slate-500 dark:text-slate-400">/ {product.unitLabel} {gstLabel(product)}</span>
+                        </p>
+                      </div>
+                      <span className={`text-xs font-bold px-3 py-1 rounded-xl border ${BADGE_STYLES[product.availability]}`}>
+                        {AVAILABILITY_LABELS[product.availability]}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed bg-slate-50 dark:bg-slate-950 p-3 rounded-xl border border-slate-100 dark:border-slate-800/60 my-4">
+                      🎯 <span className="font-bold">Guidelines:</span> {product.bestFor}
+                    </p>
+
+                    <div className="space-y-1.5 mb-4 text-xs">
+                      <p className="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider text-[10px]">Specifications</p>
+                      {product.features.map((feature, i) => (
+                        <div key={i} className="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+                          <span className="w-1 h-1 bg-orange-500 rounded-full shrink-0" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* COUNTERS WITH CLEAN HANDLERS */}
+                  <div className="border-t border-slate-100 dark:border-slate-800 pt-4 mt-2">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center bg-slate-100 dark:bg-slate-950 rounded-2xl p-1 border border-slate-200 dark:border-slate-800/80">
+                        <button 
+                          type="button" onClick={() => handleQuantityChange(product.id, -1)}
+                          disabled={!isOrderable(product)}
+                          aria-label={`Decrease quantity for ${product.name}`}
+                          className="w-11 h-11 rounded-xl font-bold flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-900 transition active:scale-90 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >−</button>
+                        <input 
+                          type="number" min="0" step="1" inputMode="numeric"
+                          aria-label={`Quantity for ${product.name}`}
+                          disabled={!isOrderable(product)}
+                          value={product.qty === 0 ? "" : product.qty} onChange={(e) => handleInputChange(product.id, e.target.value)}
+                          placeholder="0" className="w-14 text-center bg-transparent focus:outline-none font-black text-slate-900 dark:text-white"
+                        />
+                        <button 
+                          type="button" onClick={() => handleQuantityChange(product.id, 1)}
+                          disabled={!isOrderable(product)}
+                          aria-label={`Increase quantity for ${product.name}`}
+                          className="w-11 h-11 rounded-xl font-bold flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-900 transition active:scale-90 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >+</button>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Indicative Amount</p>
+                        <p className="text-lg font-black text-slate-900 dark:text-white">{hasPrice(product) ? formatRupees(product.itemTotal) : "On request"}</p>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {cementData.products.map((product) => (
-                    <ProductCard
-                      key={product.id} name={product.name} image={product.image} price={product.price}
-                      unit={product.unit} quantity={quantities[product.name] || 0}
-                      onQuantityChange={(qty) => handleQuantityChange(product.name, qty)}
-                      features={product.features} bestFor={product.bestFor}
-                    />
-                  ))}
-                </div>
-              </section>
+              ))}
             </div>
 
-            {/* AUTOMATED CALCULATOR INTERFACE */}
-            <div className="lg:sticky lg:top-24">
-              <div className="bg-slate-900 border border-slate-800 text-white rounded-[32px] p-6 shadow-2xl">
-                <h3 className="text-2xl font-black mb-4 flex items-center gap-2 text-orange-400">
-                  <FaCalculator /> Checkout & Logistics
-                </h3>
-                <div className="space-y-2 border-b border-slate-800 pb-4 mb-4 text-sm text-slate-400">
-                  <div className="flex justify-between">
-                    <span>Selected Load:</span>
-                    <span className="font-bold text-white">{totalBags} Bags</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Material Cost:</span>
-                    <span className="font-bold text-white">₹{rawMaterialTotal.toLocaleString("en-IN")}</span>
-                  </div>
+            {/* ORDER SUMMARY SIDEBAR */}
+            <EnquirySummaryCard
+              hasUnpriced={calculationGrid.hasUnpriced}
+              ratesUpdated={RATES_UPDATED}
+              unpricedText="Some selected products are priced on request and are not included in the amount."
+            >
+              {calculationGrid.totalBagsCount > 0 && (
+                <div className="flex justify-between">
+                  <span>Total cement bags:</span>
+                  <span className="font-bold text-white">{calculationGrid.totalBagsCount} {unitLabel("bag", calculationGrid.totalBagsCount)}</span>
                 </div>
-
-                <div className="mb-5">
-                  <label className="block text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Delivery Option</label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button" onClick={() => setDeliveryMode("delivery")}
-                      className={`p-3 rounded-2xl border text-sm font-bold transition ${deliveryMode === "delivery" ? "bg-orange-500 text-black" : "border-slate-800 bg-slate-950 text-slate-400"}`}
-                    >Home Delivery</button>
-                    <button
-                      type="button" onClick={() => setDeliveryMode("pickup")}
-                      className={`p-3 rounded-2xl border text-sm font-bold transition ${deliveryMode === "pickup" ? "bg-orange-500 text-black" : "border-slate-800 bg-slate-950 text-slate-400"}`}
-                    >Self-Pickup</button>
-                  </div>
+              )}
+              {calculationGrid.totalBucketsCount > 0 && (
+                <div className="flex justify-between">
+                  <span>Total buckets:</span>
+                  <span className="font-bold text-white">{calculationGrid.totalBucketsCount} {unitLabel("bucket", calculationGrid.totalBucketsCount)}</span>
                 </div>
-
-                {deliveryMode === "delivery" && (
-                  <div className="space-y-4 bg-slate-950 p-4 rounded-2xl border border-slate-800 mb-4">
-                    <input
-                      type="number" min="0" value={distance}
-                      onChange={(e) => setDistance(e.target.value === "" ? "" : Math.max(0, parseFloat(e.target.value)))}
-                      placeholder="Enter distance in km"
-                      className="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-bold focus:outline-none focus:border-orange-500"
-                    />
-                    {logistics.error && <div className="text-xs text-red-400">{logistics.error}</div>}
-                  </div>
-                )}
-
-                <div className="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span>Freight Charge:</span>
-                    <span className="font-bold text-emerald-400">₹{logistics.freightCharge}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span>Grand Total:</span>
-                    <span className="text-3xl font-black text-amber-400">₹{finalGrandTotal.toLocaleString("en-IN")}</span>
-                  </div>
-                </div>
-
-                <button
-                  type="button" onClick={handleWhatsAppOrderSubmit}
-                  disabled={rawMaterialTotal === 0 || (deliveryMode === "delivery" && !distance)}
-                  className="w-full py-4 rounded-2xl font-black text-lg bg-green-500 hover:bg-green-600 text-white transition-all disabled:bg-slate-800 disabled:text-slate-600"
-                >Send Inquiry via WhatsApp</button>
+              )}
+              <div className="flex items-baseline justify-between pt-1">
+                <span>Indicative amount:</span>
+                <span className="text-2xl font-black text-amber-400">
+                  {calculationGrid.hasUnpriced && calculationGrid.materialsCostTotal === 0 ? "On request" : formatRupees(calculationGrid.materialsCostTotal)}
+                  {calculationGrid.materialsCostTotal > 0 && calculationGrid.gstExtra && <span className="ml-1 text-xs text-slate-400">+ GST</span>}
+                </span>
               </div>
-            </div>
+              <p className="pt-2 text-xs">{LABOUR_NOTE} {GST_NOTE}</p>
+            </EnquirySummaryCard>
+
           </div>
         </div>
+
+        <FinalCTA 
+          title="Ready to Order MP Birla Cement?"
+          description="Contact Laxminath Iron for today's MP Birla Cement rates, availability and delivery details. GST invoice available on request."
+        />
       </div>
     </>
   );

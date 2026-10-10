@@ -1,27 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<urlset
-  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
->
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.laxminathiron.in/</loc>
+    <loc>https://laxminathiron.pages.dev/</loc>
   </url>
-
   <url>
-    <loc>https://www.laxminathiron.in/sariya</loc>
+    <loc>https://laxminathiron.pages.dev/sariya</loc>
   </url>
-
   <url>
-    <loc>https://www.laxminathiron.in/cement</loc>
+    <loc>https://laxminathiron.pages.dev/cement</loc>
   </url>
-
   <url>
-    <loc>https://www.laxminathiron.in/scrap</loc>
+    <loc>https://laxminathiron.pages.dev/contact</loc>
   </url>
-
-  <url>
-    <loc>https://www.laxminathiron.in/contact</loc>
-  </url>
-
 </urlset>

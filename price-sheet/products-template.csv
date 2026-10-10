@@ -1,0 +1,10 @@
+id,name,variant,price,price_basis,updated_on,availability,active,category,brand,unit,unit_label,unit_weight_kg,gst_included,sort_order,image,best_for,features
+sariya-8mm,Polaad QST Fe 550D TMT Bar,8mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,4.74,FALSE,10,,,
+sariya-10mm,Polaad QST Fe 550D TMT Bar,10mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,7.4,FALSE,20,,,
+sariya-12mm,Polaad QST Fe 550D TMT Bar,12mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,10.65,FALSE,30,,,
+sariya-16mm,Polaad QST Fe 550D TMT Bar,16mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,18.96,FALSE,40,,,
+sariya-20mm,Polaad QST Fe 550D TMT Bar,20mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,29.6,FALSE,50,,,
+sariya-25mm,Polaad QST Fe 550D TMT Bar,25mm,58,kg,2026-10-10,in_stock,TRUE,sariya,Polaad,bar,12 m bar,46.25,FALSE,60,,,
+birla-chetak-ppc,MP Birla Chetak PPC,,325,bag,2026-10-10,in_stock,TRUE,cement,MP Birla,bag,50 kg Bag,,FALSE,110,birla-chetak,"General house construction, masonry and plastering as advised for the project.",Portland Pozzolana Cement (fly ash based)|Suitable for general construction work|ISI mark and packing date printed on the bag
+birla-perfect-plus,MP Birla Perfect Plus,,340,bag,2026-10-10,in_stock,TRUE,cement,MP Birla,bag,50 kg Bag,,FALSE,120,perfect-plus,"RCC, roof and general structural work as recommended by the site engineer.",Portland Pozzolana Cement (fly ash based)|Used for RCC and general construction work|Application should follow site-engineer guidance
+birla-perfect-plus-iwp,MP Birla Perfect Plus IWP,,1700,bucket,2026-10-10,in_stock,TRUE,cement,MP Birla,bucket,10 Litre Bucket,,FALSE,130,perfect-plus-iwp,Waterproofing-related concrete and mortar applications according to product instructions.,10 litre liquid waterproofing product|Used with cement-based applications|Usage quantity should follow the product label
