@@ -39,7 +39,7 @@ const Contact = () => {
     <>
       <PageSeo
         title="Contact Laxminath Iron | Polaad TMT Dealer & MP Birla Cement Stockist"
-        description="Contact Laxminath Iron, Bassi, Chittorgarh: Polaad TMT Sariya and MP Birla Cement. Today's rates on WhatsApp. Open Mon–Sat, 8 AM – 8 PM."
+        description="Contact Laxminath Iron, Bassi, Chittorgarh: Polaad TMT Sariya and MP Birla Cement. Today's rates on WhatsApp. Open all 7 days, 8 AM – 8 PM."
         path="/contact"
         image="/og/home.jpg"
         imageAlt="Laxminath Iron shop in Bassi with Polaad sariya"

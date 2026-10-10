@@ -87,6 +87,7 @@ const Navbar = () => {
   const shouldUseSolidNavbar = scrolled || location.pathname !== "/";
 
   return (
+    <>
     <header
       role="banner"
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
@@ -185,7 +186,11 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* MOBILE MENU DRAWER */}
+    </header>
+
+      {/* MOBILE MENU DRAWER
+          Kept outside <header>: the solid header uses backdrop-blur, and a backdrop-filter
+          makes "position: fixed" children size to the header (80px) instead of the screen. */}
       <div
         id="mobile-navigation"
         aria-hidden={!isOpen}
@@ -258,7 +263,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-    </header>
+    </>
   );
 };
 
