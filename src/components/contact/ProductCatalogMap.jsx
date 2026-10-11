@@ -24,7 +24,7 @@ const ProductCatalogMap = () => {
             <span className="rounded-md bg-orange-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-orange-500">Authorised Polaad Dealer</span>
             <h3 className="mt-4 text-3xl font-black">Polaad QST Fe 550D TMT Sariya</h3>
             <p className="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
-              Polaad QST Fe 550D TMT bars in 8 mm to 25 mm, with a weight calculator and quotes on WhatsApp.
+              Polaad QST Fe 550D TMT bars in 8 mm to 25 mm, Select sizes and quantity, then get today's rate on WhatsApp.
             </p>
             <Link to="/sariya" className="mt-6 inline-flex items-center gap-2 font-black text-orange-500 transition hover:text-orange-600">
               View Sariya Range <FiArrowRight />
@@ -40,7 +40,7 @@ const ProductCatalogMap = () => {
             <span className="rounded-md bg-orange-500/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-orange-500">MP Birla Authorised Stockist</span>
             <h3 className="mt-4 text-3xl font-black">MP Birla Cement Products</h3>
             <p className="mt-4 leading-relaxed text-slate-600 dark:text-slate-400">
-              MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP, with indicative daily rates and delivery information.
+              MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP, with bag rates and delivery information.
             </p>
             <Link to="/cement" className="mt-6 inline-flex items-center gap-2 font-black text-orange-500 transition hover:text-orange-600">
               View Cement Products <FiArrowRight />

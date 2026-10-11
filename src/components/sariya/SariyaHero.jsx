@@ -90,7 +90,7 @@ const SariyaHero = () => {
           <p className="mt-6 text-lg md:text-xl text-slate-200 leading-8">
 
             Polaad QST Fe 550D TMT bars in 8 mm to 25 mm, with
-            indicative daily rates and delivery across Bassi,
+            today's rate on WhatsApp and delivery across Bassi,
             Chittorgarh and nearby regions.
 
           </p>

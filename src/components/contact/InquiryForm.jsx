@@ -51,7 +51,7 @@ const InquiryForm = () => {
           <div className="space-y-4 pt-2 text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500"><FaCheckCircle size={16} /></div>
-              <span>Rates are indicative and confirmed on WhatsApp</span>
+              <span>Today's rate is confirmed on WhatsApp</span>
             </div>
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-orange-500/10 text-orange-500"><FaTruck size={16} /></div>

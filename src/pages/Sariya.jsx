@@ -1,17 +1,8 @@
 import React, { useMemo } from "react";
 import PageSeo from "../components/PageSeo";
 import { FiTruck, FiShield, FiFileText, FiAward } from "react-icons/fi";
-import { FaCalculator } from "react-icons/fa";
-import {
-  getProducts,
-  latestUpdate,
-  formatDate,
-  formatRupees,
-  hasPrice,
-  gstLabel,
-  isOrderable,
-  AVAILABILITY_LABELS,
-} from "../data/catalog";
+import { FaListUl } from "react-icons/fa";
+import { getProducts, isOrderable, AVAILABILITY_LABELS } from "../data/catalog";
 
 import SariyaHero from "../components/sariya/SariyaHero";
 import WhyPolaad from "../components/sariya/WhyPolaad";
@@ -22,7 +13,6 @@ import { useEnquiry } from "../context/enquiryContext";
 import EnquirySummaryCard from "../components/EnquirySummaryCard";
 
 const SARIYA_ITEMS = getProducts("sariya");
-const RATES_UPDATED = latestUpdate(SARIYA_ITEMS);
 
 const BADGE_STYLES = {
   in_stock: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
@@ -36,28 +26,23 @@ const Sariya = () => {
   const handleQtyChange = (id, delta) => changeQty(id, delta);
   const handleInputChange = (id, val) => setQty(id, val === "" ? 0 : val);
 
-  const calculationGrid = useMemo(() => {
-    return SARIYA_ITEMS.map((item) => {
-      const rods = isOrderable(item) ? quantities[item.id] || 0 : 0;
-      const totalWeight = rods * item.unitWeightKg;
-      const totalAmount = hasPrice(item) ? totalWeight * item.price : 0;
-      return { ...item, rods, totalWeight, totalAmount };
-    });
-  }, [quantities]);
+  const selection = useMemo(
+    () =>
+      SARIYA_ITEMS.map((item) => ({
+        ...item,
+        rods: isOrderable(item) ? quantities[item.id] || 0 : 0,
+      })),
+    [quantities]
+  );
 
-  const totals = useMemo(() => {
-    const totalWeight = calculationGrid.reduce((acc, item) => acc + item.totalWeight, 0);
-    const totalAmount = calculationGrid.reduce((acc, item) => acc + item.totalAmount, 0);
-    const hasUnpriced = calculationGrid.some((item) => item.rods > 0 && !hasPrice(item));
-    const gstExtra = calculationGrid.some((item) => item.rods > 0 && hasPrice(item) && item.gstIncluded === false);
-    return { totalWeight, totalAmount, hasUnpriced, gstExtra };
-  }, [calculationGrid]);
+  const selected = selection.filter((item) => item.rods > 0);
+  const totalBars = selected.reduce((acc, item) => acc + item.rods, 0);
 
   return (
     <>
       <PageSeo
         title="Polaad QST Fe 550D TMT Dealer in Bassi | Laxminath Iron"
-        description="Polaad QST Fe 550D TMT bars, 8–25 mm, from an authorised dealer in Bassi, Chittorgarh. Indicative daily rates (+ GST), weight calculator and delivery."
+        description="Polaad QST Fe 550D TMT bars, 8–25 mm, from an authorised dealer in Bassi, Chittorgarh. Choose sizes and quantity, then get today's rate on WhatsApp. Delivery available."
         path="/sariya"
         image="/og/sariya.jpg"
         imageAlt="Bundles of Polaad TMT sariya bars"
@@ -129,37 +114,27 @@ const Sariya = () => {
           {/* DYNAMIC BENEFITS SECTION */}
           <WhyPolaad />
 
-          {/* CALCULATOR INTERFACE */}
+          {/* SIZE & QUANTITY SELECTION */}
           <section className="mt-24 mb-24">
             <div className="mb-10 text-left">
               <h2 className="text-3xl font-black flex items-center gap-3">
-                <FaCalculator className="text-orange-500" /> Polaad QST Fe 550D Weight & Rate Calculator
+                <FaListUl className="text-orange-500" /> Select Required Sariya Sizes &amp; Quantity
               </h2>
               <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-                Enter the number of 12 m bars per size to see the nominal weight and an indicative amount. Actual weight is confirmed at billing; the final rate is confirmed on WhatsApp.
+                Choose the number of 12 m Polaad QST Fe 550D bars you need in each size. We will reply on WhatsApp with today&apos;s rate and the total weight.
               </p>
-              {RATES_UPDATED && (
-                <p className="mt-2 text-xs font-bold text-slate-500 dark:text-slate-400">
-                  Indicative rates last updated: {formatDate(RATES_UPDATED)}
-                </p>
-              )}
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10 items-start">
               {/* SIZES LIST */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {calculationGrid.map((item) => (
+                {selection.map((item) => (
                   <div
                     key={item.id}
                     className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-md hover:border-orange-500/30 transition-all duration-300"
                   >
                     <div className="flex justify-between items-start mb-4">
-                      <div>
-                        <h3 className="text-2xl font-black tracking-tight">{item.variant} TMT Bar</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          {hasPrice(item) ? `Indicative: ₹${item.price}/kg ${gstLabel(item)}`.trim() : "Price on request"}
-                        </p>
-                      </div>
+                      <h3 className="text-2xl font-black tracking-tight">{item.variant} TMT</h3>
                       <span className={`text-xs font-bold px-3 py-1 rounded-xl border ${BADGE_STYLES[item.availability]}`}>
                         {AVAILABILITY_LABELS[item.availability]}
                       </span>
@@ -169,10 +144,6 @@ const Sariya = () => {
                       <div className="flex justify-between">
                         <span>Standard Length:</span>
                         <span className="text-slate-900 dark:text-white font-bold">12 Metres</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Nominal Bar Weight:</span>
-                        <span className="text-slate-900 dark:text-white font-bold">{item.unitWeightKg} kg</span>
                       </div>
                     </div>
 
@@ -211,44 +182,29 @@ const Sariya = () => {
                         </button>
                       </div>
                     </div>
-
-                    {/* METRIC GRID */}
-                    <div className="mt-5 grid grid-cols-2 gap-3">
-                      <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-950">
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Nominal Weight</p>
-                        <p className="mt-1 font-black text-orange-500">{item.totalWeight.toFixed(1)} kg</p>
-                      </div>
-                      <div className="rounded-2xl bg-slate-100 p-3 dark:bg-slate-950">
-                        <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Indicative Amount</p>
-                        <p className="mt-1 font-black text-slate-900 dark:text-white">
-                          {hasPrice(item) ? formatRupees(item.totalAmount) : "On request"}
-                        </p>
-                      </div>
-                    </div>
                   </div>
                 ))}
               </div>
 
               {/* ORDER SUMMARY SIDEBAR */}
-              <EnquirySummaryCard
-                hasUnpriced={totals.hasUnpriced}
-                ratesUpdated={RATES_UPDATED}
-                unpricedText="Some selected sizes are priced on request and are not included in the amount."
-              >
-                <div className="flex justify-between">
-                  <span>Sariya nominal weight:</span>
-                  <span className="font-bold text-white">
-                    {totals.totalWeight >= 1000
-                      ? `${(totals.totalWeight / 1000).toFixed(2)} Ton`
-                      : `${totals.totalWeight.toFixed(1)} kg`}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Indicative amount:</span>
-                  <span className="text-lg font-bold text-amber-400">
-                    {totals.hasUnpriced && totals.totalAmount === 0 ? "On request" : formatRupees(totals.totalAmount)}
-                    {totals.totalAmount > 0 && totals.gstExtra && <span className="ml-1 text-xs text-slate-400">+ GST</span>}
-                  </span>
+              <EnquirySummaryCard note="Today's rate and the total weight of your sariya will be confirmed on WhatsApp.">
+                {selected.length > 0 ? (
+                  <ul className="space-y-1.5">
+                    {selected.map((item) => (
+                      <li key={item.id} className="flex justify-between">
+                        <span>{item.variant} TMT</span>
+                        <span className="font-bold text-white">
+                          {item.rods} {item.rods === 1 ? "bar" : "bars"}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No sariya sizes selected yet.</p>
+                )}
+                <div className="flex justify-between border-t border-slate-800 pt-2">
+                  <span>Total bars:</span>
+                  <span className="text-lg font-bold text-amber-400">{totalBars}</span>
                 </div>
               </EnquirySummaryCard>
             </div>

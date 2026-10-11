@@ -20,7 +20,7 @@ const OUT_FILE = path.join(ROOT, "src", "data", "products.json");
 
 export const CATEGORIES = ["sariya", "cement"];
 export const UNITS = ["bar", "bag", "bucket", "piece"];
-export const PRICE_BASES = ["kg", "bag", "bucket", "piece"];
+export const PRICE_BASES = ["kg", "bar", "bag", "bucket", "piece"];
 export const AVAILABILITY = ["in_stock", "out_of_stock", "ask"];
 const REQUIRED_COLUMNS = ["id", "active", "category", "name", "unit", "price", "price_basis"];
 const MAX_PRICE = 1_000_000;
@@ -145,7 +145,7 @@ export function rowsToProducts(rows, { today = todayInIndia() } = {}) {
     if (features.length > 6 || features.some((f) => f.length > 120)) err("features: at most 6 items of 120 characters, separated by |");
     if (errors.length > before) return;
 
-    if (price === null) warnings.push(`Row ${line}: ${id} has no price — shown as "Price on request".`);
+    if (price === null && category !== "sariya") warnings.push(`Row ${line}: ${id} has no price — shown as "Price on request".`);
     products.push({
       id,
       category,
@@ -240,7 +240,10 @@ async function main() {
   console.log(`[prices] ${products.length} products from ${source} written to src/data/products.json`);
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+const samePath = (a, b) =>
+  process.platform === "win32" ? a.toLowerCase() === b.toLowerCase() : a === b;
+
+if (process.argv[1] && samePath(path.resolve(process.argv[1]), fileURLToPath(import.meta.url))) {
   main().catch((e) => {
     console.error(`[prices] ERROR: ${e.message}`);
     process.exit(1);

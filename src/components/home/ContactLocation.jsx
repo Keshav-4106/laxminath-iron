@@ -22,7 +22,7 @@ const ContactLocation = () => {
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500">Contact and Location</span>
               <h2 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">Visit Laxminath Iron</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                Contact us for today's indicative rates, availability, billing and delivery details.
+                Contact us for today's rates, availability, billing and delivery details.
               </p>
             </div>
 

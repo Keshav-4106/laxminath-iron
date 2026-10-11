@@ -13,7 +13,7 @@ export const productCategories = [
   {
     title: "MP Birla Cement Products",
     description:
-      "MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist, with indicative daily rates and delivery support.",
+      "MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist, with bag rates and delivery support.",
     image: cementImg,
     path: "/cement",
     buttonText: "Explore Cement Products",

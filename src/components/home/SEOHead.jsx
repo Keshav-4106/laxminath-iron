@@ -7,7 +7,7 @@ const SEOHead = () => (
   <>
     <PageSeo
       title="Laxminath Iron | Polaad TMT Dealer & MP Birla Cement Stockist in Bassi"
-      description="Authorised Polaad dealer and MP Birla Cement stockist in Bassi, Chittorgarh. Indicative daily rates, rebar weight calculator and delivery in nearby regions."
+      description="Authorised Polaad dealer and MP Birla Cement stockist in Bassi, Chittorgarh. Sariya and cement enquiries on WhatsApp, with delivery in nearby regions."
       path="/"
       image="/og/home.jpg"
       imageAlt="Laxminath Iron shop in Bassi with Polaad sariya"

@@ -43,8 +43,8 @@ If a build fails, Cloudflare emails you and the old prices stay live. The build 
 | id | Fixed product code. Never change it once live. Lowercase, digits, dashes. | `sariya-12mm` |
 | name | Product name shown on the site | `MP Birla Chetak PPC` |
 | variant | Size or variant (rebar size) | `12mm` |
-| price | Indicative price in rupees. **Leave empty** to show "Price on request". | `58` |
-| price_basis | What the price is per: `kg`, `bag`, `bucket` or `piece` | `kg` |
+| price | Price in rupees, exactly as it should appear. **Leave empty** to show "Price on request". Sariya rows stay empty: the sariya page never shows a price (today's rate is given on WhatsApp). | `340` |
+| price_basis | What the price is per: `kg`, `bar`, `bag`, `bucket` or `piece` (use `bar` for sariya) | `bag` |
 | updated_on | Date you last checked this price | `2026-10-10` or `10/10/2026` |
 | availability | `in_stock`, `out_of_stock` (customers can't add it) or `ask` | `in_stock` |
 | active | `TRUE` to show, `FALSE` to hide the product | `TRUE` |
@@ -53,13 +53,13 @@ If a build fails, Cloudflare emails you and the old prices stay live. The build 
 | unit | What the customer counts: `bar`, `bag`, `bucket`, `piece` | `bag` |
 | unit_label | How the unit is described | `50 kg Bag` |
 | unit_weight_kg | Weight of one unit; **required when price_basis is kg** | `10.65` |
-| gst_included | `TRUE` (shows "incl. GST"), `FALSE` (shows "+ GST") or empty (shows nothing) | |
+| gst_included | `TRUE` (shows "incl. GST"), `FALSE` (shows "+ GST") or empty (shows nothing — the current setting) | |
 | sort_order | Order on the page (smaller first) | `30` |
 | image | Picture key: `birla-chetak`, `perfect-plus`, `perfect-plus-iwp`, or empty | `perfect-plus` |
 | best_for | One sentence of guidance (cement cards) | |
 | features | Up to 6 short points separated by a pipe character (\|) | Point one\|Point two |
 
-Daily work is usually just **price** and **updated_on**.
+Daily work is usually just the cement **price** and **updated_on**.
 
 ## Test a sheet locally
 

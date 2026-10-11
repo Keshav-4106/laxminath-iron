@@ -70,7 +70,7 @@ const CementHero = () => {
 
           {/* Description Block */}
           <p className="mt-6 text-lg md:text-xl text-slate-200 leading-8">
-            Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist. Indicative daily rates, GST invoice on request and delivery across Bassi, Chittorgarh and nearby regions.
+            Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist. Today's bag rates, GST invoice on request and delivery across Bassi, Chittorgarh and nearby regions.
           </p>
 
           {/* Action Row */}

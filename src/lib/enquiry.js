@@ -26,10 +26,11 @@ const unitWord = (unit, n) => {
 const rupees = (n) => `₹${Math.round(n).toLocaleString("en-IN")}`;
 
 // One selected product → its numbers. amount is null when the product has no price.
+// Sariya is always rate-on-WhatsApp, so it never carries an amount even if the sheet has a price.
 export function lineFor(product, qty) {
   const weightKg = product.priceBasis === "kg" ? qty * product.unitWeightKg : null;
   let amount = null;
-  if (hasPrice(product)) amount = product.priceBasis === "kg" ? weightKg * product.price : qty * product.price;
+  if (hasPrice(product) && product.category !== "sariya") amount = product.priceBasis === "kg" ? weightKg * product.price : qty * product.price;
   return { product, qty, weightKg, amount };
 }
 
@@ -84,37 +85,37 @@ export function buildMessage(lines, { deliveryMode, location, name }) {
     out.push(`*${CATEGORY_TITLES[category]}*`);
     for (const l of group.lines) {
       const p = l.product;
-      const label = category === "sariya" ? `${p.variant} Fe 550D` : p.name;
-      let line = `• ${label} – ${l.qty} ${unitWord(p.unit, l.qty)}`;
-      if (l.weightKg !== null) line += ` (≈${l.weightKg.toFixed(1)} kg)`;
-      if (l.amount !== null) {
-        const rate = `₹${p.price.toLocaleString("en-IN")}/${p.priceBasis === "kg" ? "kg" : p.unit}`;
-        line += ` @ ${rate} = ${rupees(l.amount)}`;
-      } else line += " – price on request";
+      if (category === "sariya") {
+        // Sariya is enquiry-only: sizes and bar counts, no weight or amount.
+        out.push(`- ${p.variant} TMT: ${l.qty} ${unitWord(p.unit, l.qty)}`);
+        continue;
+      }
+      let line = `- ${p.name}: ${l.qty} ${unitWord(p.unit, l.qty)}`;
+      if (l.amount !== null) line += ` @ ${rupees(p.price)}/${p.priceBasis === "kg" ? "kg" : p.unit} = ${rupees(l.amount)}`;
+      else line += " (price on request)";
       out.push(line);
     }
-    if (category === "sariya" && group.weightKg > 0) {
-      const tons = group.weightKg >= 1000 ? ` (${(group.weightKg / 1000).toFixed(2)} ton)` : "";
-      out.push(`Nominal weight: ≈${group.weightKg.toFixed(1)} kg${tons}`);
+    if (category === "sariya") {
+      const bars = group.lines.reduce((sum, l) => sum + l.qty, 0);
+      out.push(`Total: ${bars} ${unitWord("bar", bars)}`);
+    } else if (group.amount > 0) {
+      const gstExtra = group.lines.some((l) => l.amount !== null && l.product.gstIncluded === false);
+      const notes = [gstExtra ? "+ GST" : "", group.unpriced ? "priced items only" : ""].filter(Boolean).join(", ");
+      out.push(`*Cement total: ${rupees(group.amount)}${notes ? ` (${notes})` : ""}*`);
     }
     out.push("");
   }
 
-  if (s.amount > 0) {
-    const notes = [s.allGstExtra ? "+ GST" : "", s.unpricedCount ? `priced items only` : ""].filter(Boolean).join(", ");
-    out.push(`*Indicative total: ${rupees(s.amount)}${notes ? ` (${notes})` : ""}*`);
-    out.push("This is an estimate, not a final quotation.");
-  } else {
-    out.push("*Price: on request*");
-  }
-  out.push("");
-
   out.push("*Delivery*");
-  if (deliveryMode === "pickup") out.push("• Self-pickup");
-  else out.push(`• Home delivery to: ${clean(location, MAX_LOCATION)}`);
+  if (deliveryMode === "pickup") out.push("- Self-pickup");
+  else out.push(`- Home delivery to: ${clean(location, MAX_LOCATION)}`);
   const who = clean(name, MAX_NAME);
-  if (who) out.push(`• Name: ${who}`);
+  if (who) out.push(`- Name: ${who}`);
   out.push("");
-  out.push("Please confirm today's rate, availability, GST and transport charges.");
+  out.push(
+    s.byCategory.sariya
+      ? "Please share today's sariya rate and total weight quote, and confirm availability and transport charges."
+      : "Please confirm today's rate, availability and transport charges."
+  );
   return out.join("\n");
 }

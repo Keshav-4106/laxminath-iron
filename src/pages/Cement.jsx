@@ -67,7 +67,7 @@ const Cement = () => {
     <>
       <PageSeo
         title="MP Birla Cement Authorised Stockist in Bassi | Laxminath Iron"
-        description="MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist in Bassi, Chittorgarh. Indicative daily rates (+ GST) and delivery."
+        description="MP Birla Chetak PPC, Perfect Plus and Perfect Plus IWP from an authorised stockist in Bassi, Chittorgarh. Today's bag rates, enquiry on WhatsApp and delivery."
         path="/cement"
         image="/og/cement.jpg"
         imageAlt="Stacked MP Birla cement bags"
@@ -116,11 +116,11 @@ const Cement = () => {
               MP Birla Cement Products Available at Our Shop
             </h2>
             <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate-500 dark:text-slate-400">
-              Select the quantity you need to see an indicative amount. The final rate, availability and transport charges are confirmed on WhatsApp.
+              Select the quantity you need to see the amount. Rates can change daily, so the final rate, availability and transport charges are confirmed on WhatsApp.
             </p>
             {RATES_UPDATED && (
               <p className="mt-2 text-xs font-bold text-slate-500 dark:text-slate-400">
-                Indicative rates last updated: {formatDate(RATES_UPDATED)}
+                Rates last updated: {formatDate(RATES_UPDATED)}
               </p>
             )}
           </div>
@@ -152,10 +152,21 @@ const Cement = () => {
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="text-xl font-black tracking-tight">{product.name}</h3>
-                        <p className="mt-1.5 text-lg font-black text-orange-500">
-                          {hasPrice(product) ? formatRupees(product.price) : "Price on request"}
-                          <span className="ml-1 text-xs font-medium text-slate-500 dark:text-slate-400">/ {product.unitLabel} {gstLabel(product)}</span>
-                        </p>
+                        {hasPrice(product) ? (
+                          <p className="mt-1.5 text-lg font-black text-orange-500">
+                            {formatRupees(product.price)}
+                            <span className="ml-1 text-xs font-medium text-slate-500 dark:text-slate-400">
+                              {`/ ${product.unitLabel} ${gstLabel(product)}`.trim()}
+                            </span>
+                          </p>
+                        ) : (
+                          <>
+                            <p className="mt-1.5 text-lg font-black text-orange-500">Price on request</p>
+                            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                              Add it to your enquiry and we will share the rate on WhatsApp.
+                            </p>
+                          </>
+                        )}
                       </div>
                       <span className={`text-xs font-bold px-3 py-1 rounded-xl border ${BADGE_STYLES[product.availability]}`}>
                         {AVAILABILITY_LABELS[product.availability]}
@@ -203,7 +214,7 @@ const Cement = () => {
                       </div>
 
                       <div className="text-right">
-                        <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Indicative Amount</p>
+                        <p className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Amount</p>
                         <p className="text-lg font-black text-slate-900 dark:text-white">{hasPrice(product) ? formatRupees(product.itemTotal) : "On request"}</p>
                       </div>
                     </div>
@@ -217,7 +228,7 @@ const Cement = () => {
             <EnquirySummaryCard
               hasUnpriced={calculationGrid.hasUnpriced}
               ratesUpdated={RATES_UPDATED}
-              unpricedText="Some selected products are priced on request and are not included in the amount."
+              unpricedText="Price-on-request items are not included in the amount. Their rate will be shared on WhatsApp."
             >
               {calculationGrid.totalBagsCount > 0 && (
                 <div className="flex justify-between">
@@ -232,7 +243,7 @@ const Cement = () => {
                 </div>
               )}
               <div className="flex items-baseline justify-between pt-1">
-                <span>Indicative amount:</span>
+                <span>Amount:</span>
                 <span className="text-2xl font-black text-amber-400">
                   {calculationGrid.hasUnpriced && calculationGrid.materialsCostTotal === 0 ? "On request" : formatRupees(calculationGrid.materialsCostTotal)}
                   {calculationGrid.materialsCostTotal > 0 && calculationGrid.gstExtra && <span className="ml-1 text-xs text-slate-400">+ GST</span>}

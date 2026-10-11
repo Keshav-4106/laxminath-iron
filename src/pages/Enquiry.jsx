@@ -70,17 +70,18 @@ const Enquiry = () => {
                         </Link>
                       </div>
                       <ul className="divide-y divide-slate-100 dark:divide-slate-800">
-                        {group.lines.map(({ product: p, qty, weightKg, amount }) => {
-                          const label = category === "sariya" ? `${p.variant} TMT bar` : p.name;
+                        {group.lines.map(({ product: p, qty, amount }) => {
+                          const label = category === "sariya" ? `${p.variant} TMT` : p.name;
                           return (
                             <li key={p.id} className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
                               <div>
                                 <p className="font-black">{label}</p>
                                 <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
-                                  {typeof p.price === "number"
-                                    ? `₹${p.price.toLocaleString("en-IN")}/${p.priceBasis === "kg" ? "kg" : p.unit} ${gstLabel(p)}`
-                                    : "Price on request"}
-                                  {weightKg !== null && ` · ≈${weightKg.toFixed(1)} kg`}
+                                  {category === "sariya"
+                                    ? "12 m bar · today's rate on WhatsApp"
+                                    : amount !== null
+                                      ? `₹${p.price.toLocaleString("en-IN")}/${p.priceBasis === "kg" ? "kg" : p.unit} ${gstLabel(p)}`.trim()
+                                      : "Price on request"}
                                 </p>
                               </div>
                               <div className="flex items-center gap-3">
@@ -99,7 +100,7 @@ const Enquiry = () => {
                                   <button type="button" onClick={() => changeQty(p.id, 1)} aria-label={`Increase ${label}`} className="flex h-11 w-11 items-center justify-center rounded-xl font-bold transition hover:bg-slate-200 dark:hover:bg-slate-900">+</button>
                                 </div>
                                 <span className="w-14 text-sm text-slate-500 dark:text-slate-400">{unitText(p.unit, qty)}</span>
-                                <span className="w-24 text-right font-black">{amount !== null ? formatRupees(amount) : "On request"}</span>
+                                <span className="w-24 text-right font-black">{amount !== null ? formatRupees(amount) : category === "sariya" ? "On WhatsApp" : "On request"}</span>
                                 <button type="button" onClick={() => setQty(p.id, 0)} aria-label={`Remove ${label}`} className="flex h-11 w-11 items-center justify-center rounded-xl text-slate-500 transition hover:bg-red-500/10 hover:text-red-600">
                                   <FiTrash2 />
                                 </button>
@@ -108,24 +109,29 @@ const Enquiry = () => {
                           );
                         })}
                       </ul>
-                      {category === "sariya" && group.weightKg > 0 && (
-                        <p className="mt-3 text-sm font-bold text-slate-600 dark:text-slate-300">
-                          Nominal weight: ≈{group.weightKg.toFixed(1)} kg{group.weightKg >= 1000 ? ` (${(group.weightKg / 1000).toFixed(2)} ton)` : ""}
-                        </p>
-                      )}
+                      {category === "sariya" && (() => {
+                        const bars = group.lines.reduce((sum, l) => sum + l.qty, 0);
+                        return (
+                          <p className="mt-3 text-sm font-bold text-slate-600 dark:text-slate-300">
+                            Total: {bars} {bars === 1 ? "bar" : "bars"}. Today&apos;s rate and total weight will be confirmed on WhatsApp.
+                          </p>
+                        );
+                      })()}
                     </section>
                   );
                 })}
 
                 <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-lg dark:border-slate-800 dark:bg-slate-900">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Indicative total</p>
+                    <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{summary.amount > 0 ? "Cement total" : "Total"}</p>
                     <p className="mt-1 text-3xl font-black text-orange-600 dark:text-orange-400">
-                      {summary.amount > 0 ? formatRupees(summary.amount) : "On request"}
+                      {summary.amount > 0 ? formatRupees(summary.amount) : "On WhatsApp"}
                       {summary.amount > 0 && summary.allGstExtra && <span className="ml-2 text-base font-bold text-slate-500 dark:text-slate-400">+ GST</span>}
                     </p>
-                    {summary.unpricedCount > 0 && summary.amount > 0 && (
-                      <p className="mt-1 text-xs font-bold text-amber-700 dark:text-amber-400">Priced items only. {summary.unpricedCount} item(s) priced on request.</p>
+                    {summary.unpricedCount > 0 && (
+                      <p className="mt-1 text-xs font-bold text-amber-700 dark:text-amber-400">
+                        {summary.amount > 0 ? "Priced items only. " : ""}Items without a price here are rated on WhatsApp.
+                      </p>
                     )}
                   </div>
                   <button type="button" onClick={() => { clearList(); setOpened(false); }} className="rounded-2xl border border-slate-300 px-5 py-3 text-sm font-bold transition hover:border-red-500 hover:text-red-600 dark:border-slate-700">

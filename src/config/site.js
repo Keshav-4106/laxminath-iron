@@ -49,9 +49,8 @@ export const GST_NOTE = "GST invoice available on request.";
 export const DELIVERY_NOTE =
   "Delivery across Bassi, Chittorgarh and nearby regions (transport charges apply based on distance and quantity).";
 export const LABOUR_NOTE = "Loading and unloading labour is charged separately.";
-export const GST_PRICE_NOTE = "Rates exclude GST. GST is extra as applicable on the final invoice.";
 export const PRICE_DISCLAIMER =
-  "Prices shown are indicative market rates, excluding GST. Daily rates fluctuate, so please confirm the latest rate, availability and transport charges with Laxminath Iron on WhatsApp before placing your order.";
+  "Rates can change daily, so please confirm the latest rate, availability and transport charges with Laxminath Iron on WhatsApp before placing your order.";
 
 export const POLAAD_PRODUCT = "Polaad QST Fe 550D TMT Sariya";
 export const POLAAD_ROLE = "Authorised Polaad Dealer";
